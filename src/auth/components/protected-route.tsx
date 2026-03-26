@@ -1,7 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAppSelector } from '../../store/hooks';
-import { selectIsAuthenticated, selectIsAdmin } from '../../store/slices/authSlice';
+import { useAuth } from '../store/useAuth';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -14,9 +13,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   requireAdmin = false,
   fallback = <Navigate to="/" replace />,
 }) => {
-  const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  const isAdmin = useAppSelector(selectIsAdmin);
-  const authLoading = useAppSelector((state) => state.auth.loading);
+  const { isAuthenticated, user, loading: authLoading } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
 
   if (authLoading) {
     return (

@@ -57,9 +57,9 @@ export interface Schedule {
 }
 
 export interface ApiResponse<T> {
-  success: boolean;
   message: string;
   data: T;
+  timestamp: string;
 }
 
 export interface NearestBusesResponse {
@@ -151,5 +151,30 @@ export interface UIState {
     message: string;
     severity: 'success' | 'error' | 'info' | 'warning';
   };
+}
+
+// User and authentication types used by BusWay auth flow
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  role: 'USER' | 'ADMIN';
+  firstName?: string;
+  lastName?: string;
+}
+
+export interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+  loading: boolean;
+  error: string | null;
+}
+
+export interface RootState {
+  buses: BusState;
+  routes: RouteState;
+  stops: StopState;
+  ui: UIState;
+  auth: AuthState;
 }
 

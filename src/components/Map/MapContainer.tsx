@@ -8,7 +8,7 @@ import { setMapCenter, setMapZoom } from '../../store/slices/uiSlice';
 import { selectAllRoutes, selectSelectedRoute, setSelectedRoute } from '../../store/slices/routeSlice';
 import { selectAllStops, selectSelectedStop, setSelectedStop } from '../../store/slices/stopSlice';
 import { selectAllBuses } from '../../store/slices/busSlice';
-import { RouteFeature, StopFeature, BusFeature } from '../../types';
+import { RouteFeature, StopFeature, BusFeature } from '../../busWay/types';
 
 // Fix Leaflet marker icons
 import icon from 'leaflet/dist/images/marker-icon.png';

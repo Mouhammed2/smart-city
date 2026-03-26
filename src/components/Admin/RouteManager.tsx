@@ -28,7 +28,7 @@ import {
   ColorLens as ColorIcon,
 } from '@mui/icons-material';
 import { routeService } from '../../services/BusWay/routeService';
-import { Route } from '../../types';
+import { Route } from '../../busWay/types';
 import { useAppDispatch } from '../../store/hooks';
 import { showNotification } from '../../store/slices/uiSlice';
 

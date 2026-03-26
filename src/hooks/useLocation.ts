@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { UserLocation } from '../types';
+import { UserLocation } from '../busWay/types';
 
 export const useLocation = () => {
   const [location, setLocation] = useState<UserLocation | null>(null);

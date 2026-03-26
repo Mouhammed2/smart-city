@@ -1,5 +1,5 @@
 import API from './api';
-import { Bus, ApiResponse, NearestBusesResponse } from '../../types';
+import { Bus, ApiResponse } from '../../busWay/types';
 
 // Mock data for testing without backend
 const mockBuses: Bus[] = [

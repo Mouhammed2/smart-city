@@ -30,7 +30,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchNearestBuses, selectNearestBuses, selectSearchRadius, setSearchRadius } from '../../store/slices/busSlice';
 import { setMapCenter, setMapZoom, selectUserLocation } from '../../store/slices/uiSlice';
 import { setSelectedBus } from '../../store/slices/busSlice';
-import { Bus } from '../../types';
+import { Bus } from '../../busWay/types';
 import { calculateDistance, formatDistance } from '../../utils/geoUtils';
 
 interface BusWithDistance extends Bus {

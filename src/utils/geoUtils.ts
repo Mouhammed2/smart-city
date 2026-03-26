@@ -1,5 +1,3 @@
-import { Coordinates } from '../types';
-
 // Calculate distance between two points in meters using Haversine formula
 export const calculateDistance = (
   lat1: number,

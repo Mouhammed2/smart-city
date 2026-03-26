@@ -8,13 +8,13 @@ import FixMyCityRoutes from './fixMyCity/FixMyCityRoutes';
 import BusWayRoutes from './busWay/BusWayRoutes';
 import { LoginPage } from './auth/pages/login-page';
 import { RegisterPage } from './auth/pages/register-page';
+import Notification from './components/Common/Notification';
 
-// Hooks
-import { useAppSelector, useAppDispatch } from './store/hooks';
-import { checkAuthStatus, selectIsAuthenticated } from './store/slices/authSlice';
+import { checkAuthStatus } from './auth/store/authSlice';
+import { useAuth } from './auth/store/useAuth';
 
 const GuestOnly: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const { isAuthenticated } = useAuth();
 
   if (isAuthenticated) {
     return <Navigate to="/civic" replace />;
@@ -24,34 +24,35 @@ const GuestOnly: React.FC<{ children: ReactNode }> = ({ children }) => {
 };
 
 const AppContent: React.FC = () => {
-  const dispatch = useAppDispatch();
-
   useEffect(() => {
-    dispatch(checkAuthStatus());
-  }, [dispatch]);
+    void checkAuthStatus();
+  }, []);
 
   return (
     <ErrorBoundary>
-      <Routes>
-        <Route
-          path="/login"
-          element={
-            <GuestOnly>
-              <LoginPage />
-            </GuestOnly>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <GuestOnly>
-              <RegisterPage />
-            </GuestOnly>
-          }
-        />
-        <Route path="/civic/*" element={<FixMyCityRoutes />} />
-        <Route path="/*" element={<BusWayRoutes />} />
-      </Routes>
+      <>
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              <GuestOnly>
+                <LoginPage />
+              </GuestOnly>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <GuestOnly>
+                <RegisterPage />
+              </GuestOnly>
+            }
+          />
+          <Route path="/civic/*" element={<FixMyCityRoutes />} />
+          <Route path="/*" element={<BusWayRoutes />} />
+        </Routes>
+        <Notification />
+      </>
     </ErrorBoundary>
   );
 };

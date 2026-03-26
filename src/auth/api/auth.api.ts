@@ -1,6 +1,10 @@
 import { api } from '../../shared/api/httpClient';
-import {ApiResponse} from "../../types";
+import type { User } from '../../busWay/types';
+import { ApiResponse, LoginResDTO, UserLoginDTO } from '../components/auth-dto';
 
-export const getMe = () => api.get('/user/me');
+export const getMe = () => api.get<ApiResponse<User> | User>('/user/me');
 
-// export const login: ApiResponse<any>
+export const login = async (dto: UserLoginDTO): Promise<string> => {
+  const res = await api.post<ApiResponse<LoginResDTO>>('/auth/login', dto, { withCredentials: true });
+  return res.data.data.token;
+};

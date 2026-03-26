@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Source, Layer } from 'react-map-gl';
 import type { LayerProps } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
-import { UserLocation as UserLocationType } from '../../types';
+import { UserLocation as UserLocationType } from '../../busWay/types';
 
 interface UserLocationProps {
   location: UserLocationType;

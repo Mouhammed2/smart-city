@@ -1,150 +1,234 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import type { User, AuthState } from '../../types';
+import type { User, AuthState } from '../../busWay/types';
+import axios from 'axios';
+import { api } from '../../shared/api/httpClient';
+import { getMe, login as loginRequest } from '../api/auth.api';
 
-// Mock authentication - in production, this would call your backend API
-const resolveMockUser = (usernameOrEmail: string): 'admin' | 'user' | null => {
-  const value = usernameOrEmail.trim().toLowerCase();
-
-  if (value === 'admin' || value === 'admin@busway.com') {
-    return 'admin';
-  }
-
-  if (value === 'user' || value === 'user@busway.com') {
-    return 'user';
-  }
-
-  return null;
+export type LoginPayload = {
+  email: string;
+  password: string;
+  stayLogin?: boolean;
 };
 
-const mockLogin = async (username: string, password: string): Promise<User> => {
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 500));
+const TOKEN_KEY = 'busway_token';
+const USER_KEY = 'busway_user';
 
-  const account = resolveMockUser(username);
+type AuthSubscriber = (state: AuthState) => void;
 
-  if (account === 'admin' && password === 'admin') {
-    return {
-      id: 1,
-      username: 'admin',
-      email: 'admin@busway.com',
-      role: 'ADMIN',
-      firstName: 'Admin',
-      lastName: 'User',
-    };
-  } else if (account === 'user' && password === 'user') {
-    return {
-      id: 2,
-      username: 'user',
-      email: 'user@busway.com',
-      role: 'USER',
-      firstName: 'Regular',
-      lastName: 'User',
-    };
+const subscribers = new Set<AuthSubscriber>();
+
+const extractErrorMessage = (error: unknown): string => {
+  if (axios.isAxiosError(error)) {
+    const apiMessage = (error.response?.data as { message?: string } | undefined)?.message;
+    return apiMessage || error.message || 'Login failed';
   }
 
-  throw new Error('Invalid credentials');
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return 'Login failed';
 };
 
-// Async thunks
-export const login = createAsyncThunk(
-  'auth/login',
-  async ({ username, password }: { username: string; password: string }, { rejectWithValue }) => {
-    try {
-      const user = await mockLogin(username, password);
-      // Store in localStorage for persistence
-      localStorage.setItem('busway_user', JSON.stringify(user));
-      return user;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
+const normalizeUser = (raw: any, emailFallback: string): User => {
+  const role = raw?.role === 'ADMIN' ? 'ADMIN' : 'USER';
 
-export const logout = createAsyncThunk(
-  'auth/logout',
-  async () => {
-    localStorage.removeItem('busway_user');
+  return {
+    id: Number(raw?.id ?? 0),
+    username: String(raw?.username ?? raw?.name ?? emailFallback),
+    email: String(raw?.email ?? emailFallback),
+    role,
+    firstName: raw?.firstName,
+    lastName: raw?.lastName,
+  };
+};
+
+const unwrapUserPayload = (payload: User | { data: User }): User => {
+  if (payload && typeof payload === 'object' && 'data' in payload) {
+    return payload.data;
+  }
+
+  return payload as User;
+};
+
+const applyAuthHeader = (token: string | null) => {
+  if (token) {
+    api.defaults.headers.common.Authorization = `Bearer ${token}`;
+    return;
+  }
+
+  delete api.defaults.headers.common.Authorization;
+};
+
+const readStoredUser = (): User | null => {
+  const storedUser = localStorage.getItem(USER_KEY);
+
+  if (!storedUser) {
     return null;
   }
-);
 
-export const checkAuthStatus = createAsyncThunk(
-  'auth/checkStatus',
-  async () => {
-    const storedUser = localStorage.getItem('busway_user');
-    if (storedUser) {
-      return JSON.parse(storedUser) as User;
-    }
+  try {
+    return JSON.parse(storedUser) as User;
+  } catch {
+    localStorage.removeItem(USER_KEY);
     return null;
   }
-);
+};
 
-// Initial state
-const initialState: AuthState = {
-  user: null,
-  isAuthenticated: false,
+const readStoredToken = (): string | null => {
+  return localStorage.getItem(TOKEN_KEY);
+};
+
+let currentAuthState: AuthState = {
+  user: readStoredUser(),
+  isAuthenticated: !!readStoredUser(),
   loading: false,
   error: null,
 };
 
-const authSlice = createSlice({
-  name: 'auth',
-  initialState,
-  reducers: {
-    clearError: (state) => {
-      state.error = null;
-    },
-    // For development/testing - quick role switch
-    setRole: (state, action: PayloadAction<'USER' | 'ADMIN'>) => {
-      if (state.user) {
-        state.user.role = action.payload;
-        localStorage.setItem('busway_user', JSON.stringify(state.user));
-      }
-    },
-  },
-  extraReducers: (builder) => {
-    // Login
-    builder.addCase(login.pending, (state) => {
-      state.loading = true;
-      state.error = null;
+const publishAuthState = () => {
+  subscribers.forEach((subscriber) => {
+    subscriber(currentAuthState);
+  });
+};
+
+const setAuthState = (next: Partial<AuthState>) => {
+  currentAuthState = { ...currentAuthState, ...next };
+  publishAuthState();
+};
+
+export const getAuthState = (): AuthState => currentAuthState;
+
+export const subscribeAuthState = (subscriber: AuthSubscriber): (() => void) => {
+  subscribers.add(subscriber);
+
+  return () => {
+    subscribers.delete(subscriber);
+  };
+};
+
+export const clearError = () => {
+  setAuthState({ error: null });
+};
+
+export const login = async ({ email, password, stayLogin = false }: LoginPayload): Promise<User> => {
+  setAuthState({ loading: true, error: null });
+
+  try {
+    const token = await loginRequest({ email, password, stayLogin });
+    localStorage.setItem(TOKEN_KEY, token);
+    applyAuthHeader(token);
+
+    const meResponse = await getMe();
+    const rawUser = unwrapUserPayload(meResponse.data);
+    const user = normalizeUser(rawUser, email);
+
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+
+    setAuthState({
+      user,
+      isAuthenticated: true,
+      loading: false,
+      error: null,
     });
-    builder.addCase(login.fulfilled, (state, action) => {
-      state.loading = false;
-      state.user = action.payload;
-      state.isAuthenticated = true;
-    });
-    builder.addCase(login.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-      state.isAuthenticated = false;
-    });
 
-    // Logout
-    builder.addCase(logout.fulfilled, (state) => {
-      state.user = null;
-      state.isAuthenticated = false;
-      state.error = null;
+    return user;
+  } catch (error: unknown) {
+    const message = extractErrorMessage(error);
+
+    setAuthState({
+      user: null,
+      isAuthenticated: false,
+      loading: false,
+      error: message,
     });
 
-    // Check auth status
-    builder.addCase(checkAuthStatus.fulfilled, (state, action) => {
-      if (action.payload) {
-        state.user = action.payload;
-        state.isAuthenticated = true;
-      }
+    throw new Error(message);
+  }
+};
+
+export const logout = async (): Promise<null> => {
+  localStorage.removeItem(USER_KEY);
+  localStorage.removeItem(TOKEN_KEY);
+  applyAuthHeader(null);
+
+  setAuthState({
+    user: null,
+    isAuthenticated: false,
+    loading: false,
+    error: null,
+  });
+
+  return null;
+};
+
+export const checkAuthStatus = async (): Promise<User | null> => {
+  const storedUser = readStoredUser();
+
+  if (storedUser) {
+    setAuthState({
+      user: storedUser,
+      isAuthenticated: true,
+      loading: false,
+      error: null,
     });
-  },
-});
+    return storedUser;
+  }
 
-// Actions
-export const { clearError, setRole } = authSlice.actions;
+  const token = readStoredToken();
 
-// Selectors
-export const selectCurrentUser = (state: { auth: AuthState }) => state.auth.user;
-export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;
-export const selectIsAdmin = (state: { auth: AuthState }) => state.auth.user?.role === 'ADMIN';
-export const selectAuthLoading = (state: { auth: AuthState }) => state.auth.loading;
-export const selectAuthError = (state: { auth: AuthState }) => state.auth.error;
+  if (!token) {
+    setAuthState({ user: null, isAuthenticated: false, loading: false, error: null });
+    return null;
+  }
 
-export default authSlice.reducer;
+  setAuthState({ loading: true, error: null });
 
+  try {
+    applyAuthHeader(token);
+    const response = await getMe();
+    const rawUser = unwrapUserPayload(response.data);
+    const user = normalizeUser(rawUser, 'user@domain.com');
+
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+
+    setAuthState({
+      user,
+      isAuthenticated: true,
+      loading: false,
+      error: null,
+    });
+
+    return user;
+  } catch {
+    localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+    applyAuthHeader(null);
+
+    setAuthState({
+      user: null,
+      isAuthenticated: false,
+      loading: false,
+      error: null,
+    });
+
+    return null;
+  }
+};
+
+const selectFromState = (state?: { auth?: AuthState }): AuthState => {
+  return state?.auth ?? currentAuthState;
+};
+
+export const selectCurrentUser = (state?: { auth?: AuthState }) => selectFromState(state).user;
+export const selectIsAuthenticated = (state?: { auth?: AuthState }) => selectFromState(state).isAuthenticated;
+export const selectIsAdmin = (state?: { auth?: AuthState }) => selectFromState(state).user?.role === 'ADMIN';
+export const selectAuthLoading = (state?: { auth?: AuthState }) => selectFromState(state).loading;
+export const selectAuthError = (state?: { auth?: AuthState }) => selectFromState(state).error;
+
+const authReducer = (state: AuthState = currentAuthState): AuthState => {
+  return state;
+};
+
+applyAuthHeader(readStoredToken());
+
+export default authReducer;

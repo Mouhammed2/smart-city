@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
-import { RootState, UserLocation, UIState } from '../../types';
+import { RootState, UserLocation, UIState } from '../../busWay/types';
 
 const initialState: UIState = {
   sidebarOpen: true,
   sidebarCollapsed: false,
   theme: 'light',
-  mapCenter: [-73.9857, 40.7484], // Default to NYC [lng, lat]
+  mapCenter: [-73.9857, 40.7484],
   mapZoom: 13,
   userLocation: null,
   loading: false,

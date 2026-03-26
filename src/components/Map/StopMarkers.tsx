@@ -4,7 +4,7 @@ import type { LayerProps } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
 import { Box, Typography, Chip, Paper } from '@mui/material';
 import { Accessible, BeachAccess, Roofing } from '@mui/icons-material';
-import { StopFeature, Stop } from '../../types';
+import { StopFeature, Stop } from '../../busWay/types';
 import { useAppDispatch } from '../../store/hooks';
 import { setSelectedStop } from '../../store/slices/stopSlice';
 

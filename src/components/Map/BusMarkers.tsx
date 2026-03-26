@@ -4,7 +4,7 @@ import type { LayerProps } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
 import { Box, Typography, Chip, Paper, LinearProgress } from '@mui/material';
 import { DirectionsBus, People, Schedule } from '@mui/icons-material';
-import { BusFeature, Bus } from '../../types';
+import { BusFeature, Bus } from '../../busWay/types';
 import { useAppDispatch } from '../../store/hooks';
 import { setSelectedBus } from '../../store/slices/busSlice';
 import { formatOccupancy, getOccupancyColor } from '../../utils/formatters';

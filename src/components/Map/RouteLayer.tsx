@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Source, Layer } from 'react-map-gl';
 import type { LayerProps } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
-import { RouteFeature, Route } from '../../types';
+import { RouteFeature, Route } from '../../busWay/types';
 
 interface RouteLayerProps {
   features: RouteFeature[];

@@ -1,6 +1,6 @@
 export interface ApiResponse<T> {
-  message?: string;
-  data?: T;
+  message: string;
+  data: T;
   timestamp: string;
 }
 
@@ -9,6 +9,10 @@ export type UserLoginDTO = {
   password: string;
   stayLogin: boolean;
 };
+
+export type LoginResDTO = {
+  token: string;
+}
 
 export type RegisterDTO = {
   name: string;

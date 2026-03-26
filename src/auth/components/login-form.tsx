@@ -8,8 +8,9 @@ import { Button } from '../../fixMyCity/components/ui/button';
 import { Checkbox } from '../../fixMyCity/components/ui/checkbox';
 import { Input } from '../../fixMyCity/components/ui/input';
 import { Label } from '../../fixMyCity/components/ui/label';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { login, selectAuthError, selectAuthLoading } from '../../store/slices/authSlice';
+import { useAppDispatch } from '../../store/hooks';
+import { login } from '../store/authSlice';
+import { useAuth } from '../store/useAuth';
 import { showNotification } from '../../store/slices/uiSlice';
 
 const initialValues: UserLoginDTO = {
@@ -21,8 +22,7 @@ const initialValues: UserLoginDTO = {
 export function LoginForm() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const loading = useAppSelector(selectAuthLoading);
-  const authError = useAppSelector(selectAuthError);
+  const { loading } = useAuth();
   const [values, setValues] = useState<UserLoginDTO>(initialValues);
   const [errors, setErrors] = useState<AuthErrors<UserLoginDTO>>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -42,7 +42,8 @@ export function LoginForm() {
     }
 
     try {
-      await dispatch(login({ username: values.email, password: values.password })).unwrap();
+      await login({ email: values.email, password: values.password, stayLogin: values.stayLogin });
+
       dispatch(
         showNotification({
           message: 'Connexion reussie',
@@ -50,8 +51,13 @@ export function LoginForm() {
         }),
       );
       navigate('/civic');
-    } catch {
-      // Error message is provided by the auth slice.
+    } catch (error) {
+      dispatch(
+        showNotification({
+          message: error instanceof Error ? error.message : 'Erreur de connexion',
+          severity: 'error',
+        }),
+      );
     }
   }
 
@@ -113,7 +119,6 @@ export function LoginForm() {
           </Label>
         </div>
 
-        {authError ? <p className="text-sm text-red-600">{authError}</p> : null}
 
         <Button className="w-full" type="submit" disabled={loading}>
           {loading ? 'Connexion...' : 'Se connecter'}

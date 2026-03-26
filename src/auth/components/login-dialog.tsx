@@ -11,24 +11,14 @@ import {
   Alert,
   Chip,
 } from '@mui/material';
-import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import {
-  login,
-  logout,
-  selectCurrentUser,
-  selectIsAuthenticated,
-  selectAuthLoading,
-  selectAuthError,
-  clearError,
-} from '../../store/slices/authSlice';
+import { useAppDispatch } from '../../store/hooks';
+import { clearError, login, logout } from '../store/authSlice';
+import { useAuth } from '../store/useAuth';
 import { showNotification } from '../../store/slices/uiSlice';
 
 const LoginDialog: React.FC = () => {
   const dispatch = useAppDispatch();
-  const user = useAppSelector(selectCurrentUser);
-  const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  const loading = useAppSelector(selectAuthLoading);
-  const error = useAppSelector(selectAuthError);
+  const { user, isAuthenticated, loading, error } = useAuth();
 
   const [open, setOpen] = useState(false);
   const [username, setUsername] = useState('');
@@ -36,14 +26,14 @@ const LoginDialog: React.FC = () => {
 
   const handleOpen = () => {
     setOpen(true);
-    dispatch(clearError());
+    clearError();
   };
 
   const handleClose = () => {
     setOpen(false);
     setUsername('');
     setPassword('');
-    dispatch(clearError());
+    clearError();
   };
 
   const handleLogin = async () => {
@@ -53,16 +43,16 @@ const LoginDialog: React.FC = () => {
     }
 
     try {
-      await dispatch(login({ username, password })).unwrap();
+      await login({ email: username, password });
       dispatch(showNotification({ message: `Welcome back, ${username}!`, severity: 'success' }));
       handleClose();
-    } catch {
-      // Error is handled in the slice.
+    } catch (caughtError) {
+      dispatch(showNotification({ message: caughtError instanceof Error ? caughtError.message : 'Login failed', severity: 'error' }));
     }
   };
 
   const handleLogout = async () => {
-    await dispatch(logout());
+    await logout();
     dispatch(showNotification({ message: 'Logged out successfully', severity: 'info' }));
   };
 

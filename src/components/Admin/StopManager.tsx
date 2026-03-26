@@ -29,7 +29,7 @@ import {
   Place as PlaceIcon,
 } from '@mui/icons-material';
 import { stopService } from '../../services/BusWay/stopService';
-import { Stop } from '../../types';
+import { Stop } from '../../busWay/types';
 import { useAppDispatch } from '../../store/hooks';
 import { showNotification } from '../../store/slices/uiSlice';
 

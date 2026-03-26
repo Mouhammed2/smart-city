@@ -23,7 +23,7 @@ import {
 } from '@mui/icons-material';
 import { useAppSelector } from '../../store/hooks';
 import { scheduleService } from '../../services/BusWay/scheduleService';
-import { Schedule } from '../../types';
+import { Schedule } from '../../busWay/types';
 import { formatTime } from '../../utils/formatters';
 
 const StopDetails: React.FC = () => {
