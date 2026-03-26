@@ -1,6 +1,1 @@
-import { LoginForm } from "@/components/auth/login-form";
-
-export function LoginPage() {
-  return <LoginForm />;
-}
-
+export { LoginPage } from '../../../auth/pages/login-page';

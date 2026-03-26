@@ -1,6 +1,1 @@
-import { RegisterForm } from "@/components/auth/register-form";
-
-export function RegisterPage() {
-  return <RegisterForm />;
-}
-
+export { RegisterPage } from '../../../auth/pages/register-page';

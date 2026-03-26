@@ -5,7 +5,7 @@ import { ThemeProvider, CssBaseline, Box } from '@mui/material';
 import Navbar from '../../components/Common/Navbar';
 import Sidebar from '../../components/Common/Sidebar';
 import Notification from '../../components/Common/Notification';
-import LoginDialog from '../../components/Auth/LoginDialog';
+import LoginDialog from '../../auth/components/login-dialog';
 import PageSkeleton from '../../components/Common/PageSkeleton';
 import { lightTheme, darkTheme } from '../../theme';
 import { useAppSelector } from '../../store/hooks';
@@ -64,4 +64,3 @@ const BusWayLayout: React.FC = () => {
 };
 
 export default BusWayLayout;
-

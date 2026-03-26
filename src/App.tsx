@@ -6,8 +6,8 @@ import { store } from './store/store';
 import ErrorBoundary from './components/Common/ErrorBoundary';
 import FixMyCityRoutes from './fixMyCity/FixMyCityRoutes';
 import BusWayRoutes from './busWay/BusWayRoutes';
-import { LoginPage } from './fixMyCity/pages/login-page';
-import { RegisterPage } from './fixMyCity/pages/register-page';
+import { LoginPage } from './auth/pages/login-page';
+import { RegisterPage } from './auth/pages/register-page';
 
 // Hooks
 import { useAppSelector, useAppDispatch } from './store/hooks';
