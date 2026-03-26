@@ -2,11 +2,27 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import type { User, AuthState } from '../../types';
 
 // Mock authentication - in production, this would call your backend API
+const resolveMockUser = (usernameOrEmail: string): 'admin' | 'user' | null => {
+  const value = usernameOrEmail.trim().toLowerCase();
+
+  if (value === 'admin' || value === 'admin@busway.com') {
+    return 'admin';
+  }
+
+  if (value === 'user' || value === 'user@busway.com') {
+    return 'user';
+  }
+
+  return null;
+};
+
 const mockLogin = async (username: string, password: string): Promise<User> => {
   // Simulate API call
   await new Promise(resolve => setTimeout(resolve, 500));
-  
-  if (username === 'admin' && password === 'admin') {
+
+  const account = resolveMockUser(username);
+
+  if (account === 'admin' && password === 'admin') {
     return {
       id: 1,
       username: 'admin',
@@ -15,7 +31,7 @@ const mockLogin = async (username: string, password: string): Promise<User> => {
       firstName: 'Admin',
       lastName: 'User',
     };
-  } else if (username === 'user' && password === 'user') {
+  } else if (account === 'user' && password === 'user') {
     return {
       id: 2,
       username: 'user',
