@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import ProtectedRoute from '../components/ProtectedRoute';
+import ProtectedRoute from '../auth/components/protected-route';
 import BusWayLayout from './layout/BusWayLayout';
 
 const HomePage = React.lazy(() => import('./pages/home-page'));
@@ -31,4 +31,3 @@ const BusWayRoutes: React.FC = () => {
 };
 
 export default BusWayRoutes;
-
