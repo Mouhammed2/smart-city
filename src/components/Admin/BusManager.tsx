@@ -35,8 +35,8 @@ import {
   MyLocation as LocationIcon,
   People as PeopleIcon,
 } from '@mui/icons-material';
-import { busService } from '../../services/busService';
-import { routeService } from '../../services/routeService';
+import { busService } from '../../services/BusWay/busService';
+import { routeService } from '../../services/BusWay/routeService';
 import { Bus, Route } from '../../types';
 import { useAppDispatch } from '../../store/hooks';
 import { showNotification } from '../../store/slices/uiSlice';

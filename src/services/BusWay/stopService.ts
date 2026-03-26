@@ -1,5 +1,5 @@
 import API from './api';
-import { Stop, ApiResponse } from '../types';
+import { Stop, ApiResponse } from '../../types';
 
 // Mock data for testing without backend
 const mockStops: Stop[] = [

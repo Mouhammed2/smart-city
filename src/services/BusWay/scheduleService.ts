@@ -1,5 +1,5 @@
 import API from './api';
-import { Schedule, ApiResponse } from '../types';
+import { Schedule, ApiResponse } from '../../types';
 
 export const scheduleService = {
   // Get schedules by route

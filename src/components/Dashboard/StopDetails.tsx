@@ -22,7 +22,7 @@ import {
   DirectionsBus as BusIcon,
 } from '@mui/icons-material';
 import { useAppSelector } from '../../store/hooks';
-import { scheduleService } from '../../services/scheduleService';
+import { scheduleService } from '../../services/BusWay/scheduleService';
 import { Schedule } from '../../types';
 import { formatTime } from '../../utils/formatters';
 

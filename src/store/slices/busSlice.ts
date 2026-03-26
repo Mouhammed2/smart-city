@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction, createSelector } from '@reduxjs/toolkit';
 import { Bus, RootState, BusState } from '../../types';
-import { busService } from '../../services/busService';
+import { busService } from '../../services/BusWay/busService';
 
 const initialState: BusState = {
   buses: [],

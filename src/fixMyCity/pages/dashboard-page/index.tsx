@@ -1,10 +1,9 @@
 import { useNavigate } from "react-router-dom";
-
-import { Sidebar, TopAppBar } from "@/components/layout/app-shell";
-import { DashboardBulletinsSection } from "@/pages/dashboard-page/components/bulletins-section";
-import { DashboardContent } from "@/pages/dashboard-page/components/dashboard-content";
-import { DashboardOverviewSection } from "@/pages/dashboard-page/components/overview-section";
-import { DashboardRecentReportsSection } from "@/pages/dashboard-page/components/recent-reports-section";
+import {DashboardRecentReportsSection} from "./components/recent-reports-section";
+import {DashboardBulletinsSection} from "./components/bulletins-section";
+import {Sidebar, TopAppBar} from "../../components/layout/app-shell";
+import {DashboardContent} from "./components/dashboard-content";
+import {DashboardOverviewSection} from "./components/overview-section";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();

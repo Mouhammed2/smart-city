@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction, createSelector } from '@reduxjs/toolkit';
 import { Stop, RootState, StopState } from '../../types';
-import { stopService } from '../../services/stopService';
+import { stopService } from '../../services/BusWay/stopService';
 
 const initialState: StopState = {
   stops: [],

@@ -1,5 +1,5 @@
 import API from './api';
-import { Route, ApiResponse } from '../types';
+import { Route, ApiResponse } from '../../types';
 
 // Mock data for testing without backend
 const mockRoutes: Route[] = [

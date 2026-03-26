@@ -6,7 +6,7 @@ module.exports = {
       webpackConfig.resolve.alias = {
         ...webpackConfig.resolve.alias,
         'mapbox-gl': 'maplibre-gl',
-        '@': path.resolve(__dirname, 'src/civic')
+        '@': path.resolve(__dirname, 'src/fixMyCity')
       };
       return webpackConfig;
     }

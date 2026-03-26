@@ -1,12 +1,12 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { DashboardPage } from '@/pages/dashboard-page';
-import { IssueDetailPage } from '@/pages/issue-detail-page';
-import { NewReportPage } from '@/pages/new-report-page';
-import { TrackingPage } from '@/pages/tracking-page';
 import ProtectedRoute from '../components/ProtectedRoute';
+import {DashboardPage} from "./pages/dashboard-page";
+import {NewReportPage} from "./pages/new-report-page";
+import {IssueDetailPage} from "./pages/issue-detail-page";
+import {TrackingPage} from "./pages/tracking-page";
 
-const CivicRoutes = () => {
+const FixMyCityRoutes = () => {
   return (
     <Routes>
       <Route
@@ -46,4 +46,4 @@ const CivicRoutes = () => {
   );
 };
 
-export default CivicRoutes;
+export default FixMyCityRoutes;

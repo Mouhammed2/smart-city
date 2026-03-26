@@ -28,7 +28,7 @@ import {
   Add as AddIcon,
   Place as PlaceIcon,
 } from '@mui/icons-material';
-import { stopService } from '../../services/stopService';
+import { stopService } from '../../services/BusWay/stopService';
 import { Stop } from '../../types';
 import { useAppDispatch } from '../../store/hooks';
 import { showNotification } from '../../store/slices/uiSlice';

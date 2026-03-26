@@ -1,9 +1,8 @@
 import { ArrowLeft, Bell, ClipboardList, Grid3X3, PlusCircle, UserCircle2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import {Avatar, AvatarFallback} from "../ui/avatar";
+import {Button} from "../ui/button";
+import {Card, CardContent} from "../ui/card";
 
 type TopAppBarProps = {
   showBack?: boolean;

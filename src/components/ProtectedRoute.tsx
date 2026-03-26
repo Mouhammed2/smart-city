@@ -2,7 +2,6 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAppSelector } from '../store/hooks';
 import { selectIsAuthenticated, selectIsAdmin } from '../store/slices/authSlice';
-import { CircularProgress, Box } from '@mui/material';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -22,9 +21,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   // Show loading while checking auth status
   if (authLoading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <CircularProgress />
-      </Box>
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-300 border-t-blue-600" aria-label="Loading" />
+      </div>
     );
   }
 
