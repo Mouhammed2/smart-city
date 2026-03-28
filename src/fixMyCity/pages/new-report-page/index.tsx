@@ -12,7 +12,7 @@ export const NewReportPage = () => {
       <TopAppBar showBack />
       <main className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 pb-32 pt-24 lg:grid-cols-12">
         <NewReportIntro />
-        <NewReportContent onSaveDraft={() => navigate("/civic/tracking")} onSubmitReport={() => navigate("/civic/tracking")} />
+        <NewReportContent onSaveDraft={() => navigate("/fixmycity/tracking")} onSubmitReport={() => navigate("/fixmycity/tracking")} />
       </main>
     </div>
   );

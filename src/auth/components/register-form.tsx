@@ -7,8 +7,8 @@ import { type AuthErrors, type RegisterDTO, validateRegister } from './auth-dto'
 import { Button } from '../../fixMyCity/components/ui/button';
 import { Input } from '../../fixMyCity/components/ui/input';
 import { Label } from '../../fixMyCity/components/ui/label';
-import { useAppDispatch } from '../../store/hooks';
-import { showNotification } from '../../store/slices/uiSlice';
+import { useAppDispatch } from '../../busWay/store/hooks';
+import { showNotification } from '../../busWay/store/slices/uiSlice';
 
 const initialValues: RegisterDTO = {
   name: '',

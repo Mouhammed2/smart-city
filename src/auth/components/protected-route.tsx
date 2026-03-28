@@ -11,7 +11,7 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requireAdmin = false,
-  fallback = <Navigate to="/" replace />,
+  fallback = <Navigate to="/busway" replace />,
 }) => {
   const { isAuthenticated, user, loading: authLoading } = useAuth();
   const isAdmin = user?.role === 'ADMIN';

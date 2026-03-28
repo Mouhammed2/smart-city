@@ -153,28 +153,10 @@ export interface UIState {
   };
 }
 
-// User and authentication types used by BusWay auth flow
-export interface User {
-  id: number;
-  username: string;
-  email: string;
-  role: 'USER' | 'ADMIN';
-  firstName?: string;
-  lastName?: string;
-}
-
-export interface AuthState {
-  user: User | null;
-  isAuthenticated: boolean;
-  loading: boolean;
-  error: string | null;
-}
-
 export interface RootState {
   buses: BusState;
   routes: RouteState;
   stops: StopState;
   ui: UIState;
-  auth: AuthState;
 }
 

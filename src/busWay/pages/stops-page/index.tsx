@@ -1,2 +1,1 @@
-export { default } from '../../../pages/StopsPage';
-
+export default function StopsPage() { return <div>Stops</div>; }

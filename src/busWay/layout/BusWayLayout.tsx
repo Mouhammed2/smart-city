@@ -2,13 +2,12 @@ import React, { Suspense, useMemo } from 'react';
 import { Outlet } from 'react-router-dom';
 import { ThemeProvider, CssBaseline, Box } from '@mui/material';
 
-import Navbar from '../../components/Common/Navbar';
-import Sidebar from '../../components/Common/Sidebar';
-import LoginDialog from '../../auth/components/login-dialog';
-import PageSkeleton from '../../components/Common/PageSkeleton';
-import { lightTheme, darkTheme } from '../../theme';
-import { useAppSelector } from '../../store/hooks';
-import { selectSidebarOpen, selectSidebarCollapsed, selectTheme as selectThemeMode } from '../../store/slices/uiSlice';
+import Navbar from '../components/Common/Navbar';
+import Sidebar from '../components/Common/Sidebar';
+import PageSkeleton from '../components/Common/PageSkeleton';
+import { lightTheme, darkTheme } from '../theme';
+import { useAppSelector } from '../store/hooks';
+import { selectSidebarOpen, selectSidebarCollapsed, selectTheme as selectThemeMode } from '../store/slices/uiSlice';
 
 const DRAWER_WIDTH = 260;
 const COLLAPSED_DRAWER_WIDTH = 72;
@@ -54,7 +53,6 @@ const BusWayLayout: React.FC = () => {
           <Suspense fallback={<PageSkeleton />}>
             <Outlet />
           </Suspense>
-          <LoginDialog />
         </Box>
       </Box>
     </ThemeProvider>

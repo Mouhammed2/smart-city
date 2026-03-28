@@ -4,6 +4,15 @@ export interface ApiResponse<T> {
   timestamp: string;
 }
 
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  role: 'USER' | 'ADMIN';
+  firstName?: string;
+  lastName?: string;
+}
+
 export type UserLoginDTO = {
   email: string;
   password: string;

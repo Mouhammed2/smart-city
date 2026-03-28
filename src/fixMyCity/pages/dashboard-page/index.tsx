@@ -17,7 +17,7 @@ export const DashboardPage = () => {
           <DashboardOverviewSection />
 
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
-            <DashboardRecentReportsSection onOpenIssue={() => navigate("/civic/issue/1")} />
+            <DashboardRecentReportsSection onOpenIssue={() => navigate("/fixmycity/issue/1")} />
             <DashboardBulletinsSection />
           </div>
         </DashboardContent>

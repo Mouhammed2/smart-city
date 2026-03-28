@@ -1,2 +1,1 @@
-export { default } from '../../../pages/AdminPage';
-
+export default function AdminPage() { return <div>Admin</div>; }

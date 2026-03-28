@@ -13,7 +13,7 @@ export const DashboardRecentReportsSection = ({ onOpenIssue }: DashboardRecentRe
     <div className="space-y-6 lg:col-span-2">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-slate-900">Recent Civic Reports</h2>
-        <Link to="/civic/tracking" className="text-sm font-bold text-blue-700">
+        <Link to="/fixmycity/tracking" className="text-sm font-bold text-blue-700">
           View All Activity
         </Link>
       </div>

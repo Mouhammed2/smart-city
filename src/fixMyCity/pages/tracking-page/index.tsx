@@ -14,7 +14,7 @@ export const TrackingPage = () => {
         <Sidebar />
         <main className="mx-auto max-w-6xl flex-1 px-6 py-12 md:px-16">
           <TrackingHeader />
-          <TrackingTabs onOpenIssue={() => navigate("/civic/issue/1")} />
+          <TrackingTabs onOpenIssue={() => navigate("/fixmycity/issue/1")} />
         </main>
       </div>
     </div>

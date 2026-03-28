@@ -8,10 +8,10 @@ import { Button } from '../../fixMyCity/components/ui/button';
 import { Checkbox } from '../../fixMyCity/components/ui/checkbox';
 import { Input } from '../../fixMyCity/components/ui/input';
 import { Label } from '../../fixMyCity/components/ui/label';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch } from '../../busWay/store/hooks';
 import { login } from '../store/authSlice';
 import { useAuth } from '../store/useAuth';
-import { showNotification } from '../../store/slices/uiSlice';
+import { showNotification } from '../../busWay/store/slices/uiSlice';
 
 const initialValues: UserLoginDTO = {
   email: '',
@@ -50,7 +50,7 @@ export function LoginForm() {
           severity: 'success',
         }),
       );
-      navigate('/civic');
+      navigate('/fixmycity');
     } catch (error) {
       dispatch(
         showNotification({
