@@ -2,6 +2,24 @@ import axios from 'axios';
 import { clearStoredToken, getStoredToken, getTokenPersistence, setStoredToken } from '../auth/tokenStorage';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
+let authRedirectInProgress = false;
+
+const buildCurrentPath = () => {
+  if (typeof window === 'undefined') return '/';
+  return `${window.location.pathname}${window.location.search}${window.location.hash}`;
+};
+
+const isAuthPath = (pathname: string) => pathname === '/login' || pathname === '/register';
+
+const redirectToLogin = () => {
+  if (typeof window === 'undefined') return;
+  if (authRedirectInProgress || isAuthPath(window.location.pathname)) return;
+
+  authRedirectInProgress = true;
+  const redirect = buildCurrentPath();
+  const params = new URLSearchParams({ redirect });
+  window.location.assign(`/login?${params.toString()}`);
+};
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -50,6 +68,7 @@ api.interceptors.response.use(
 
         if (!refreshedToken) {
           clearStoredToken();
+          redirectToLogin();
           return Promise.reject(error);
         }
 
@@ -59,8 +78,14 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         clearStoredToken();
+        redirectToLogin();
         return Promise.reject(refreshError);
       }
+    }
+
+    if (status === 401 && !isAuthCall) {
+      clearStoredToken();
+      redirectToLogin();
     }
 
     console.error('API Error:', error.response || error.message);

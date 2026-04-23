@@ -17,11 +17,18 @@ import HomePage from './home/home-page';
 import { checkAuthStatus } from 'busway/auth/store/authSlice';
 import { useAuth } from 'busway/auth/store/useAuth';
 
+const resolveRedirect = (candidate: string | null | undefined, fallback: string) =>
+  candidate && candidate.startsWith('/') ? candidate : fallback;
+
 const GuestOnly: React.FC<{ children: ReactNode }> = ({ children }) => {
   const location = useLocation();
   const { isAuthenticated } = useAuth();
-  const redirectTo =
-    ((location.state as { from?: { pathname?: string } } | null)?.from?.pathname ?? '/fixmycity');
+  const queryRedirect = new URLSearchParams(location.search).get('redirect');
+  const fromState = (location.state as { from?: { pathname?: string; search?: string; hash?: string } } | null)?.from;
+  const stateRedirect = fromState?.pathname
+    ? `${fromState.pathname}${fromState.search ?? ''}${fromState.hash ?? ''}`
+    : undefined;
+  const redirectTo = resolveRedirect(queryRedirect ?? stateRedirect, '/fixmycity');
 
   if (isAuthenticated) {
     return <Navigate to={redirectTo} replace />;

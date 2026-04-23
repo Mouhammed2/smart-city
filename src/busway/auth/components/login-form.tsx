@@ -13,6 +13,9 @@ import { useAuth } from '../store/useAuth';
 
 const initialValues: LoginPayload = { email: '', password: '', rememberMe: false };
 
+const resolveRedirect = (candidate: string | null | undefined, fallback: string) =>
+  candidate && candidate.startsWith('/') ? candidate : fallback;
+
 export function LoginForm() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,7 +29,12 @@ export function LoginForm() {
     setErrors((c) => ({ ...c, [field]: undefined }));
   }
 
-  const redirectTo = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname ?? '/fixmycity';
+  const queryRedirect = new URLSearchParams(location.search).get('redirect');
+  const fromState = (location.state as { from?: { pathname?: string; search?: string; hash?: string } } | null)?.from;
+  const stateRedirect = fromState?.pathname
+    ? `${fromState.pathname}${fromState.search ?? ''}${fromState.hash ?? ''}`
+    : undefined;
+  const redirectTo = resolveRedirect(queryRedirect ?? stateRedirect, '/fixmycity');
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

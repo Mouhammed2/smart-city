@@ -20,6 +20,14 @@ function tabClass(isActive: boolean) {
 export function AuthShell({ title, description, activeTab, children }: AuthShellProps) {
   const location = useLocation();
   const from = (location.state as { from?: unknown } | null)?.from;
+  const queryRedirect = new URLSearchParams(location.search).get('redirect');
+  const fromState = (location.state as { from?: { pathname?: string; search?: string; hash?: string } } | null)?.from;
+  const stateRedirect = fromState?.pathname
+    ? `${fromState.pathname}${fromState.search ?? ''}${fromState.hash ?? ''}`
+    : null;
+  const redirect = queryRedirect ?? stateRedirect;
+  const loginPath = redirect ? `/login?redirect=${encodeURIComponent(redirect)}` : '/login';
+  const registerPath = redirect ? `/register?redirect=${encodeURIComponent(redirect)}` : '/register';
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
@@ -37,10 +45,10 @@ export function AuthShell({ title, description, activeTab, children }: AuthShell
           </div>
           <div className="grid grid-cols-2 gap-2">
             <Button asChild variant="outline" className={tabClass(activeTab === 'login')}>
-              <Link to="/login" state={{ from }}>Connexion</Link>
+              <Link to={loginPath} state={{ from }}>Connexion</Link>
             </Button>
             <Button asChild variant="outline" className={tabClass(activeTab === 'register')}>
-              <Link to="/register" state={{ from }}>Inscription</Link>
+              <Link to={registerPath} state={{ from }}>Inscription</Link>
             </Button>
           </div>
         </CardHeader>

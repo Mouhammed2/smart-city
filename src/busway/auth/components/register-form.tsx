@@ -12,6 +12,9 @@ import { register } from '../store/authSlice';
 
 const initialValues: RegisterPayload = { email: '', password: '', rememberMe: true };
 
+const resolveRedirect = (candidate: string | null | undefined, fallback: string) =>
+  candidate && candidate.startsWith('/') ? candidate : fallback;
+
 export function RegisterForm() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,7 +22,12 @@ export function RegisterForm() {
   const [errors, setErrors] = useState<AuthErrors<RegisterPayload>>({});
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const redirectTo = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname ?? '/fixmycity';
+  const queryRedirect = new URLSearchParams(location.search).get('redirect');
+  const fromState = (location.state as { from?: { pathname?: string; search?: string; hash?: string } } | null)?.from;
+  const stateRedirect = fromState?.pathname
+    ? `${fromState.pathname}${fromState.search ?? ''}${fromState.hash ?? ''}`
+    : undefined;
+  const redirectTo = resolveRedirect(queryRedirect ?? stateRedirect, '/fixmycity');
 
   function setField<K extends keyof RegisterPayload>(field: K, value: RegisterPayload[K]) {
     setValues((c) => ({ ...c, [field]: value }));
