@@ -29,6 +29,7 @@ export type LoginPayload = {
 export type RegisterPayload = {
   email: string;
   password: string;
+  confirmPassword: string;
   rememberMe: boolean;
 };
 
@@ -58,5 +59,7 @@ export function validateRegister(values: RegisterPayload): AuthErrors<RegisterPa
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) errors.email = 'Email invalide';
   if (!values.password) errors.password = 'Mot de passe requis';
   else if (values.password.length < 6) errors.password = 'Minimum 6 caracteres';
+  if (!values.confirmPassword) errors.confirmPassword = 'Confirmation requise';
+  else if (values.confirmPassword !== values.password) errors.confirmPassword = 'Les mots de passe ne correspondent pas';
   return errors;
 }

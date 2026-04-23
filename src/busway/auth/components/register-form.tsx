@@ -10,7 +10,7 @@ import { Input } from 'fixMyCity/components/ui/input';
 import { Label } from 'fixMyCity/components/ui/label';
 import { register } from '../store/authSlice';
 
-const initialValues: RegisterPayload = { email: '', password: '', rememberMe: true };
+const initialValues: RegisterPayload = { email: '', password: '', confirmPassword: '', rememberMe: true };
 
 const resolveRedirect = (candidate: string | null | undefined, fallback: string) =>
   candidate && candidate.startsWith('/') ? candidate : fallback;
@@ -79,6 +79,17 @@ export function RegisterForm() {
               </Button>
             </div>
             {errors.password && <p className="text-sm text-red-600">{errors.password}</p>}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="register-confirm-password">Confirmer le mot de passe</Label>
+            <div className="relative">
+              <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+              <Input id="register-confirm-password" type={showPassword ? 'text' : 'password'} autoComplete="new-password"
+                     className="pl-9" placeholder="Confirmez votre mot de passe"
+                     value={values.confirmPassword} onChange={(e) => setField('confirmPassword', e.target.value)} />
+            </div>
+            {errors.confirmPassword && <p className="text-sm text-red-600">{errors.confirmPassword}</p>}
           </div>
 
           <div className="flex items-center gap-2">
