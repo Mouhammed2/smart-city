@@ -11,6 +11,8 @@ import BusWayRoutes from 'busway/BusWayRoutes';
 import { LoginPage } from 'busway/auth/pages/login-page';
 import { RegisterPage } from 'busway/auth/pages/register-page';
 import Notification from 'busway/components/Common/Notification';
+import ProtectedRoute from 'busway/auth/components/protected-route';
+import HomePage from './home/home-page';
 
 import { checkAuthStatus } from 'busway/auth/store/authSlice';
 import { useAuth } from 'busway/auth/store/useAuth';
@@ -53,11 +55,33 @@ const AppContent: React.FC = () => {
               </GuestOnly>
             }
           />
-          <Route path="/fixmycity/*" element={<FixMyCityRoutes />} />
-          <Route path="/busway/*" element={<BusWayRoutes />} />
-          <Route path="/civic/*" element={<Navigate to="/fixmycity" replace />} />
-          <Route path="/" element={<Navigate to="/busway" replace />} />
-          <Route path="*" element={<Navigate to="/busway" replace />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route
+            path="/fixmycity/*"
+            element={
+              <ProtectedRoute>
+                <FixMyCityRoutes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/busway/*"
+            element={
+              <ProtectedRoute>
+                <BusWayRoutes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/civic/*"
+            element={
+              <ProtectedRoute>
+                <Navigate to="/fixmycity" replace />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
         <Notification />
         <ToastContainer position="top-right" autoClose={3000} theme="colored" />

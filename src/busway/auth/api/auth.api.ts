@@ -4,7 +4,7 @@ import type { ApiResponse, LoginPayload, LoginResDTO, RefreshResDTO, RegisterPay
 export const apiLogin = (dto: LoginPayload) =>
     api.post<ApiResponse<LoginResDTO>>(
         '/auth/login',
-        { email: dto.email, password: dto.password },
+        { email: dto.email, password: dto.password, stayLogin: dto.rememberMe },
         { withCredentials: true }
     );
 
