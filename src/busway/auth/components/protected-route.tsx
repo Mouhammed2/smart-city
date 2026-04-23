@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../store/useAuth';
 
 interface ProtectedRouteProps {
@@ -11,8 +11,9 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requireAdmin = false,
-  fallback = <Navigate to="/busway" replace />,
+  fallback,
 }) => {
+  const location = useLocation();
   const { isAuthenticated, user, loading: authLoading } = useAuth();
   const isAdmin = user?.role === 'ADMIN';
 
@@ -28,7 +29,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   if (!isAuthenticated) {
-    return <>{fallback}</>;
+    return <>{fallback ?? <Navigate to="/login" state={{ from: location }} replace />}</>;
   }
 
   if (requireAdmin && !isAdmin) {

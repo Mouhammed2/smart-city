@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
 import { Building2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
-import { Button } from '../../fixMyCity/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../fixMyCity/components/ui/card';
-import { cn } from '../../fixMyCity/lib/utils';
+import { Button } from 'fixMyCity/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from 'fixMyCity/components/ui/card';
+import { cn } from 'fixMyCity/lib/utils';
 
 type AuthShellProps = {
   title: string;
@@ -18,6 +18,9 @@ function tabClass(isActive: boolean) {
 }
 
 export function AuthShell({ title, description, activeTab, children }: AuthShellProps) {
+  const location = useLocation();
+  const from = (location.state as { from?: unknown } | null)?.from;
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
       <Card className="w-full max-w-md shadow-sm">
@@ -34,10 +37,10 @@ export function AuthShell({ title, description, activeTab, children }: AuthShell
           </div>
           <div className="grid grid-cols-2 gap-2">
             <Button asChild variant="outline" className={tabClass(activeTab === 'login')}>
-              <Link to="/login">Connexion</Link>
+              <Link to="/login" state={{ from }}>Connexion</Link>
             </Button>
             <Button asChild variant="outline" className={tabClass(activeTab === 'register')}>
-              <Link to="/register">Inscription</Link>
+              <Link to="/register" state={{ from }}>Inscription</Link>
             </Button>
           </div>
         </CardHeader>

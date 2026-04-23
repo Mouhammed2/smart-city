@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import ProtectedRoute from '../auth/components/protected-route';
+import ProtectedRoute from '../busway/auth/components/protected-route';
 import {DashboardPage} from "./pages/dashboard-page";
 import {NewReportPage} from "./pages/new-report-page";
 import {IssueDetailPage} from "./pages/issue-detail-page";
@@ -12,7 +12,7 @@ const FixMyCityRoutes = () => {
       <Route
         index
         element={
-          <ProtectedRoute fallback={<Navigate to="/login" replace />}>
+          <ProtectedRoute>
             <DashboardPage />
           </ProtectedRoute>
         }
@@ -20,7 +20,7 @@ const FixMyCityRoutes = () => {
       <Route
         path="new-report"
         element={
-          <ProtectedRoute fallback={<Navigate to="/login" replace />}>
+          <ProtectedRoute>
             <NewReportPage />
           </ProtectedRoute>
         }
@@ -28,7 +28,7 @@ const FixMyCityRoutes = () => {
       <Route
         path="tracking"
         element={
-          <ProtectedRoute fallback={<Navigate to="/login" replace />}>
+          <ProtectedRoute>
             <TrackingPage />
           </ProtectedRoute>
         }
@@ -36,7 +36,7 @@ const FixMyCityRoutes = () => {
       <Route
         path="issue/:id"
         element={
-          <ProtectedRoute fallback={<Navigate to="/login" replace />}>
+          <ProtectedRoute>
             <IssueDetailPage />
           </ProtectedRoute>
         }
