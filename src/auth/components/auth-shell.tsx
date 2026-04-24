@@ -2,9 +2,9 @@ import type { ReactNode } from 'react';
 import { Building2 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
-import { Button } from 'fixMyCity/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from 'fixMyCity/components/ui/card';
-import { cn } from 'fixMyCity/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 type AuthShellProps = {
   title: string;
@@ -57,4 +57,3 @@ export function AuthShell({ title, description, activeTab, children }: AuthShell
     </main>
   );
 }
-

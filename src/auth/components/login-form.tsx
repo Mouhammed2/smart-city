@@ -1,13 +1,13 @@
-import { type FormEvent, useState } from 'react';
+import { type ChangeEvent, type FormEvent, useState } from 'react';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AuthShell } from './auth-shell';
 import { type AuthErrors, type LoginPayload, validateLogin } from './auth-dto';
-import { Button } from 'fixMyCity/components/ui/button';
-import { Checkbox } from 'fixMyCity/components/ui/checkbox';
-import { Input } from 'fixMyCity/components/ui/input';
-import { Label } from 'fixMyCity/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { login } from '../store/authSlice';
 import { useAuth } from '../store/useAuth';
 
@@ -60,7 +60,7 @@ export function LoginForm() {
             <div className="relative">
               <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
               <Input id="login-email" type="email" autoComplete="email" placeholder="exemple@ville.ma"
-                     className="pl-9" value={values.email} onChange={(e) => setField('email', e.target.value)} />
+                     className="pl-9" value={values.email} onChange={(e: ChangeEvent<HTMLInputElement>) => setField('email', e.target.value)} />
             </div>
             {errors.email && <p className="text-sm text-red-600">{errors.email}</p>}
           </div>
@@ -71,7 +71,7 @@ export function LoginForm() {
               <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
               <Input id="login-password" type={showPassword ? 'text' : 'password'} autoComplete="current-password"
                      placeholder="Saisissez votre mot de passe" className="pl-9 pr-10"
-                     value={values.password} onChange={(e) => setField('password', e.target.value)} />
+                     value={values.password} onChange={(e: ChangeEvent<HTMLInputElement>) => setField('password', e.target.value)} />
               <Button type="button" variant="ghost" size="sm" onClick={() => setShowPassword((c) => !c)}
                       className="absolute right-1 top-1/2 h-8 -translate-y-1/2 px-2 text-slate-500">
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -82,7 +82,7 @@ export function LoginForm() {
 
           <div className="flex items-center gap-2">
             <Checkbox id="remember-me" checked={values.rememberMe}
-                      onCheckedChange={(checked) => setField('rememberMe', checked === true)} />
+                      onCheckedChange={(checked: boolean | 'indeterminate') => setField('rememberMe', checked === true)} />
             <Label htmlFor="remember-me" className="font-normal text-slate-600">Rester connecte</Label>
           </div>
 

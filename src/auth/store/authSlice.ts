@@ -1,5 +1,5 @@
 import { apiLogin, apiLogout, apiMe, apiRefresh, apiRegister } from '../api/auth.api';
-import { api } from '../../../shared/api/httpClient';
+import { api } from '../../shared/api/httpClient';
 import type { AuthState, LoginPayload, RegisterPayload, User } from '../components/auth-dto';
 import {
     clearStoredToken,
@@ -7,7 +7,7 @@ import {
     getStoredToken,
     setStoredToken,
     type TokenPersistence,
-} from '../../../shared/auth/tokenStorage';
+} from '../../shared/auth/tokenStorage';
 
 type Subscriber = (state: AuthState) => void;
 const subscribers = new Set<Subscriber>();

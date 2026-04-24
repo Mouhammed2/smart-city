@@ -8,14 +8,14 @@ import { store } from 'busway/store/store';
 import ErrorBoundary from 'busway/components/Common/ErrorBoundary';
 import FixMyCityRoutes from './fixMyCity/FixMyCityRoutes';
 import BusWayRoutes from 'busway/BusWayRoutes';
-import { LoginPage } from 'busway/auth/pages/login-page';
-import { RegisterPage } from 'busway/auth/pages/register-page';
+import { LoginPage } from './auth/pages/login-page';
+import { RegisterPage } from './auth/pages/register-page';
 import Notification from 'busway/components/Common/Notification';
-import ProtectedRoute from 'busway/auth/components/protected-route';
+import ProtectedRoute from './auth/components/protected-route';
 import HomePage from './home/home-page';
 
-import { checkAuthStatus } from 'busway/auth/store/authSlice';
-import { useAuth } from 'busway/auth/store/useAuth';
+import { checkAuthStatus } from './auth/store/authSlice';
+import { useAuth } from './auth/store/useAuth';
 
 const resolveRedirect = (candidate: string | null | undefined, fallback: string) =>
   candidate && candidate.startsWith('/') ? candidate : fallback;
