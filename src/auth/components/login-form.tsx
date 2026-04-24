@@ -34,7 +34,7 @@ export function LoginForm() {
   const stateRedirect = fromState?.pathname
     ? `${fromState.pathname}${fromState.search ?? ''}${fromState.hash ?? ''}`
     : undefined;
-  const redirectTo = resolveRedirect(queryRedirect ?? stateRedirect, '/fixmycity');
+  const redirectTo = resolveRedirect(queryRedirect ?? stateRedirect, '/');
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
