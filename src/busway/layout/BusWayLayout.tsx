@@ -37,16 +37,10 @@ const BusWayLayout: React.FC = () => {
           component="main"
           sx={{
             flexGrow: 1,
-            width: {
-              sm: `calc(100% - ${sidebarOpen ? drawerWidth : 0}px)`,
-            },
-            ml: {
-              sm: `${sidebarOpen ? drawerWidth : 0}px`,
-            },
             mt: "72px",
             height: "calc(100vh - 72px)",
             transition: (theme) =>
-              theme.transitions.create(["margin", "width"], {
+              theme.transitions.create(["width"], {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.enteringScreen,
               }),
@@ -56,7 +50,7 @@ const BusWayLayout: React.FC = () => {
           }}
         >
           <Suspense fallback={<PageSkeleton />}>
-            <Box sx={{ flexGrow: 1, height: "100%", overflow: "hidden" }}>
+            <Box sx={{ flexGrow: 1, height: "100%", overflow: "hidden", p: 1 }}>
               <Outlet />
             </Box>
           </Suspense>

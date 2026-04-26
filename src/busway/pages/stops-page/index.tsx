@@ -12,7 +12,9 @@ const StopsPage: React.FC = () => {
       </Box>
 
       {/* Main Content - Map */}
-      <Box sx={{ flexGrow: 1, height: "100%" }}>
+      <Box
+        sx={{ flexGrow: 1, height: "100%", minHeight: 0, overflow: "hidden" }}
+      >
         <MapContainer
           showUserLocation={true}
           showNearestBuses={false}

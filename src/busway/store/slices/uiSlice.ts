@@ -1,23 +1,24 @@
-import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
-import { RootState, UserLocation, UIState } from '../../types';
+import { createSlice, PayloadAction, createSelector } from "@reduxjs/toolkit";
+import { RootState, UserLocation, UIState } from "../../types";
 
 const initialState: UIState = {
   sidebarOpen: true,
   sidebarCollapsed: false,
-  theme: 'light',
-  mapCenter: [-73.9857, 40.7484],
-  mapZoom: 13,
+  theme: "light",
+  // Default map center: Oujda, Morocco
+  mapCenter: [-1.908, 34.6815],
+  mapZoom: 14,
   userLocation: null,
   loading: false,
   notification: {
     open: false,
-    message: '',
-    severity: 'info',
+    message: "",
+    severity: "info",
   },
 };
 
 const uiSlice = createSlice({
-  name: 'ui',
+  name: "ui",
   initialState,
   reducers: {
     toggleSidebar: (state) => {
@@ -26,7 +27,7 @@ const uiSlice = createSlice({
     setSidebarCollapsed: (state, action: PayloadAction<boolean>) => {
       state.sidebarCollapsed = action.payload;
     },
-    setTheme: (state, action: PayloadAction<'light' | 'dark'>) => {
+    setTheme: (state, action: PayloadAction<"light" | "dark">) => {
       state.theme = action.payload;
     },
     setMapCenter: (state, action: PayloadAction<[number, number]>) => {
@@ -38,10 +39,13 @@ const uiSlice = createSlice({
     setUserLocation: (state, action: PayloadAction<UserLocation | null>) => {
       state.userLocation = action.payload;
     },
-    showNotification: (state, action: PayloadAction<{
-      message: string;
-      severity: 'success' | 'error' | 'info' | 'warning';
-    }>) => {
+    showNotification: (
+      state,
+      action: PayloadAction<{
+        message: string;
+        severity: "success" | "error" | "info" | "warning";
+      }>,
+    ) => {
       state.notification = {
         open: true,
         message: action.payload.message,
@@ -75,40 +79,40 @@ export const selectUIState = (state: RootState) => state.ui;
 
 export const selectSidebarOpen = createSelector(
   [selectUIState],
-  (uiState) => uiState.sidebarOpen
+  (uiState) => uiState.sidebarOpen,
 );
 
 export const selectSidebarCollapsed = createSelector(
   [selectUIState],
-  (uiState) => uiState.sidebarCollapsed
+  (uiState) => uiState.sidebarCollapsed,
 );
 
 export const selectTheme = createSelector(
   [selectUIState],
-  (uiState) => uiState.theme
+  (uiState) => uiState.theme,
 );
 
 export const selectMapCenter = createSelector(
   [selectUIState],
-  (uiState) => uiState.mapCenter
+  (uiState) => uiState.mapCenter,
 );
 
 export const selectMapZoom = createSelector(
   [selectUIState],
-  (uiState) => uiState.mapZoom
+  (uiState) => uiState.mapZoom,
 );
 
 export const selectUserLocation = createSelector(
   [selectUIState],
-  (uiState) => uiState.userLocation
+  (uiState) => uiState.userLocation,
 );
 
 export const selectNotification = createSelector(
   [selectUIState],
-  (uiState) => uiState.notification
+  (uiState) => uiState.notification,
 );
 
 export const selectUILoading = createSelector(
   [selectUIState],
-  (uiState) => uiState.loading
+  (uiState) => uiState.loading,
 );

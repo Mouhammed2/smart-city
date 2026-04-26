@@ -1,4 +1,4 @@
-import { Feature, LineString, Point } from 'geojson';
+import { Feature, LineString, Point } from "geojson";
 
 export interface Coordinates {
   lat: number;
@@ -6,7 +6,7 @@ export interface Coordinates {
 }
 
 export interface Geometry {
-  type: 'LineString';
+  type: "LineString";
   coordinates: number[][];
 }
 
@@ -16,6 +16,7 @@ export interface Route {
   name: string;
   geometry: Geometry;
   color: string;
+  snappedCoordinates?: number[][]; // Road-snapped coordinates from OSRM
 }
 
 export interface Stop {
@@ -36,10 +37,10 @@ export interface Bus {
   busNumber: string;
   latitude: number;
   longitude: number;
-  status: 'ACTIVE' | 'INACTIVE' | 'MAINTENANCE';
+  status: "ACTIVE" | "INACTIVE" | "MAINTENANCE";
   routeName?: string;
   routeId?: number;
-  occupancyStatus: 'AVAILABLE' | 'FULL' | 'LIMITED';
+  occupancyStatus: "AVAILABLE" | "FULL" | "LIMITED";
   currentPassengers: number;
   capacity: number;
   lastUpdated?: string;
@@ -53,7 +54,7 @@ export interface Schedule {
   stopName: string;
   departureTime: string;
   arrivalTime: string;
-  dayType: 'WEEKDAY' | 'SATURDAY' | 'SUNDAY';
+  dayType: "WEEKDAY" | "SATURDAY" | "SUNDAY";
 }
 
 export interface ApiResponse<T> {
@@ -103,10 +104,10 @@ export interface BusFeature extends Feature<Point> {
   properties: {
     id: number;
     busNumber: string;
-    status: Bus['status'];
+    status: Bus["status"];
     routeName?: string;
     routeId?: number;
-    occupancyStatus: Bus['occupancyStatus'];
+    occupancyStatus: Bus["occupancyStatus"];
     currentPassengers: number;
     capacity: number;
     lastUpdated?: string;
@@ -141,7 +142,7 @@ export interface StopState {
 export interface UIState {
   sidebarOpen: boolean;
   sidebarCollapsed: boolean;
-  theme: 'light' | 'dark';
+  theme: "light" | "dark";
   mapCenter: [number, number];
   mapZoom: number;
   userLocation: UserLocation | null;
@@ -149,7 +150,7 @@ export interface UIState {
   notification: {
     open: boolean;
     message: string;
-    severity: 'success' | 'error' | 'info' | 'warning';
+    severity: "success" | "error" | "info" | "warning";
   };
 }
 
@@ -159,4 +160,3 @@ export interface RootState {
   stops: StopState;
   ui: UIState;
 }
-

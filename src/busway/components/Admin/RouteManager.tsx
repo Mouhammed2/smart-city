@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Paper,
@@ -20,34 +20,34 @@ import {
   Snackbar,
   Typography,
   CircularProgress,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Add as AddIcon,
   ColorLens as ColorIcon,
-} from '@mui/icons-material';
-import { routeService } from '../../services/BusWay/routeService';
-import { Route } from '../../types';
-import { useAppDispatch } from '../../store/hooks';
-import { showNotification } from '../../store/slices/uiSlice';
+} from "@mui/icons-material";
+import { routeService } from "../../services/BusWay/routeService";
+import { Route } from "../../types";
+import { useAppDispatch } from "../../store/hooks";
+import { showNotification } from "../../store/slices/uiSlice";
 
 interface RouteFormData {
   routeNumber: string;
   name: string;
   color: string;
   geometry: {
-    type: 'LineString';
+    type: "LineString";
     coordinates: number[][];
   };
 }
 
 const initialFormData: RouteFormData = {
-  routeNumber: '',
-  name: '',
-  color: '#3366CC',
+  routeNumber: "",
+  name: "",
+  color: "#3366CC",
   geometry: {
-    type: 'LineString',
+    type: "LineString",
     coordinates: [],
   },
 };
@@ -72,10 +72,12 @@ const RouteManager: React.FC = () => {
       const data = await routeService.getAll();
       setRoutes(data || []);
     } catch (error) {
-      dispatch(showNotification({
-        message: 'Failed to load routes',
-        severity: 'error',
-      }));
+      dispatch(
+        showNotification({
+          message: "Failed to load routes",
+          severity: "error",
+        }),
+      );
       setRoutes([]);
     } finally {
       setLoading(false);
@@ -108,38 +110,45 @@ const RouteManager: React.FC = () => {
     try {
       // Convert GeoJSON coordinates to WKT format for backend
       const coords = formData.geometry.coordinates;
-      const wktString = coords.length > 0 
-        ? `LINESTRING (${coords.map((c: number[]) => `${c[0]} ${c[1]}`).join(', ')})`
-        : '';
-      
+      const wktString =
+        coords.length > 0
+          ? `LINESTRING (${coords.map((c: number[]) => `${c[0]} ${c[1]}`).join(", ")})`
+          : "";
+
       const submitData = {
         ...formData,
-        geometry: wktString  // Send as WKT string instead of GeoJSON object
+        geometry: wktString, // Send as WKT string instead of GeoJSON object
       };
-      
-      console.log('Creating route with data:', submitData);
+
+      console.log("Creating route with data:", submitData);
       if (editingRoute) {
         await routeService.update(editingRoute.id, submitData as any);
-        dispatch(showNotification({
-          message: 'Route updated successfully',
-          severity: 'success',
-        }));
+        dispatch(
+          showNotification({
+            message: "Route updated successfully",
+            severity: "success",
+          }),
+        );
       } else {
         await routeService.create(submitData as any);
-        dispatch(showNotification({
-          message: 'Route created successfully',
-          severity: 'success',
-        }));
+        dispatch(
+          showNotification({
+            message: "Route created successfully",
+            severity: "success",
+          }),
+        );
       }
       handleCloseDialog();
       loadRoutes();
     } catch (error: any) {
-      console.error('Failed to save route:', error);
-      console.error('Error response:', error.response?.data);
-      dispatch(showNotification({
-        message: `Failed to save route: ${error.response?.data?.message || error.message}`,
-        severity: 'error',
-      }));
+      console.error("Failed to save route:", error);
+      console.error("Error response:", error.response?.data);
+      dispatch(
+        showNotification({
+          message: `Failed to save route: ${error.response?.data?.message || error.message}`,
+          severity: "error",
+        }),
+      );
     }
   };
 
@@ -153,16 +162,20 @@ const RouteManager: React.FC = () => {
 
     try {
       await routeService.delete(routeToDelete);
-      dispatch(showNotification({
-        message: 'Route deleted successfully',
-        severity: 'success',
-      }));
+      dispatch(
+        showNotification({
+          message: "Route deleted successfully",
+          severity: "success",
+        }),
+      );
       loadRoutes();
     } catch (error) {
-      dispatch(showNotification({
-        message: 'Failed to delete route',
-        severity: 'error',
-      }));
+      dispatch(
+        showNotification({
+          message: "Failed to delete route",
+          severity: "error",
+        }),
+      );
     } finally {
       setDeleteConfirmOpen(false);
       setRouteToDelete(null);
@@ -188,8 +201,7 @@ const RouteManager: React.FC = () => {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Typography variant="h5">Route Management</Typography>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
@@ -199,7 +211,7 @@ const RouteManager: React.FC = () => {
         </Button>
       </Box>
 
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -230,7 +242,7 @@ const RouteManager: React.FC = () => {
                     <Chip
                       label={route.routeNumber}
                       size="small"
-                      sx={{ backgroundColor: route.color, color: 'white' }}
+                      sx={{ backgroundColor: route.color, color: "white" }}
                     />
                   </TableCell>
                   <TableCell>{route.name}</TableCell>
@@ -241,16 +253,25 @@ const RouteManager: React.FC = () => {
                         height: 30,
                         backgroundColor: route.color,
                         borderRadius: 1,
-                        border: '1px solid #ccc',
+                        border: "1px solid #ccc",
                       }}
                     />
                   </TableCell>
-                  <TableCell>{route.geometry?.coordinates?.length ?? 0}</TableCell>
                   <TableCell>
-                    <IconButton onClick={() => handleOpenDialog(route)} size="small">
+                    {route.geometry?.coordinates?.length ?? 0}
+                  </TableCell>
+                  <TableCell>
+                    <IconButton
+                      onClick={() => handleOpenDialog(route)}
+                      size="small"
+                    >
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleDeleteClick(route.id)} size="small" color="error">
+                    <IconButton
+                      onClick={() => handleDeleteClick(route.id)}
+                      size="small"
+                      color="error"
+                    >
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>
@@ -262,31 +283,42 @@ const RouteManager: React.FC = () => {
       </TableContainer>
 
       {/* Create/Edit Dialog */}
-      <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="md" fullWidth>
+      <Dialog
+        open={dialogOpen}
+        onClose={handleCloseDialog}
+        maxWidth="md"
+        fullWidth
+      >
         <DialogTitle>
-          {editingRoute ? 'Edit Route' : 'Create New Route'}
+          {editingRoute ? "Edit Route" : "Create New Route"}
         </DialogTitle>
         <DialogContent>
-          <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ pt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
             <TextField
               label="Route Number"
               value={formData.routeNumber}
-              onChange={(e) => setFormData({ ...formData, routeNumber: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, routeNumber: e.target.value })
+              }
               fullWidth
               required
             />
             <TextField
               label="Route Name"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               fullWidth
               required
             />
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               <TextField
                 label="Color"
                 value={formData.color}
-                onChange={(e) => setFormData({ ...formData, color: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, color: e.target.value })
+                }
                 fullWidth
               />
               <Box
@@ -295,7 +327,7 @@ const RouteManager: React.FC = () => {
                   height: 40,
                   backgroundColor: formData.color,
                   borderRadius: 1,
-                  border: '1px solid #ccc',
+                  border: "1px solid #ccc",
                 }}
               />
             </Box>
@@ -313,20 +345,30 @@ const RouteManager: React.FC = () => {
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
           <Button onClick={handleSubmit} variant="contained" color="primary">
-            {editingRoute ? 'Update' : 'Create'}
+            {editingRoute ? "Update" : "Create"}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
-      <Dialog open={deleteConfirmOpen} onClose={() => setDeleteConfirmOpen(false)}>
+      <Dialog
+        open={deleteConfirmOpen}
+        onClose={() => setDeleteConfirmOpen(false)}
+      >
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
-          <Typography>Are you sure you want to delete this route? This action cannot be undone.</Typography>
+          <Typography>
+            Are you sure you want to delete this route? This action cannot be
+            undone.
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteConfirmOpen(false)}>Cancel</Button>
-          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+          <Button
+            onClick={handleDeleteConfirm}
+            color="error"
+            variant="contained"
+          >
             Delete
           </Button>
         </DialogActions>

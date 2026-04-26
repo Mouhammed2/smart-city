@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Drawer,
   List,
@@ -13,7 +13,7 @@ import {
   IconButton,
   useTheme,
   Fade,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Home as HomeIcon,
   DirectionsBus as BusIcon,
@@ -23,10 +23,16 @@ import {
   AdminPanelSettings as AdminIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
-} from '@mui/icons-material';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { toggleSidebar, setSidebarCollapsed, selectSidebarOpen, selectSidebarCollapsed } from '../../store/slices/uiSlice';
+} from "@mui/icons-material";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import {
+  toggleSidebar,
+  setSidebarCollapsed,
+  selectSidebarOpen,
+  selectSidebarCollapsed,
+} from "../../store/slices/uiSlice";
+import { useAuth } from "../../../auth/store/useAuth";
 
 const DRAWER_WIDTH = 260;
 const COLLAPSED_WIDTH = 72;
@@ -45,19 +51,21 @@ const Sidebar: React.FC = () => {
   const dispatch = useAppDispatch();
   const sidebarOpen = useAppSelector(selectSidebarOpen);
   const collapsed = useAppSelector(selectSidebarCollapsed);
+  const { user } = useAuth();
+  const isAdmin = user?.role === "ADMIN";
 
   // Public menu items - available to everyone
   const publicMenuItems: MenuItem[] = [
-    { text: 'Dashboard', icon: <HomeIcon />, path: '/busway' },
-    { text: 'Routes', icon: <RouteIcon />, path: '/busway/routes' },
-    { text: 'Stops', icon: <StopIcon />, path: '/busway/stops' },
-    { text: 'Live Buses', icon: <BusIcon />, path: '/busway/buses', badge: 12 },
-    { text: 'Schedules', icon: <ScheduleIcon />, path: '/busway/schedules' },
+    { text: "Dashboard", icon: <HomeIcon />, path: "/busway/dashboard" },
+    { text: "Routes", icon: <RouteIcon />, path: "/busway/routes" },
+    { text: "Stops", icon: <StopIcon />, path: "/busway/stops" },
+    { text: "Live Buses", icon: <BusIcon />, path: "/busway/buses", badge: 12 },
+    { text: "Schedules", icon: <ScheduleIcon />, path: "/busway/schedules" },
   ];
 
-  const adminMenuItems: MenuItem[] = [
-    { text: 'Administration', icon: <AdminIcon />, path: '/busway/admin' },
-  ];
+  const adminMenuItems: MenuItem[] = isAdmin
+    ? [{ text: "Administration", icon: <AdminIcon />, path: "/busway/admin" }]
+    : [];
 
   const drawerWidth = collapsed ? COLLAPSED_WIDTH : DRAWER_WIDTH;
 
@@ -73,10 +81,11 @@ const Sidebar: React.FC = () => {
   };
 
   const renderMenuItem = (item: MenuItem, index: number) => {
-    const isActive = item.path === '/busway'
-      ? location.pathname === '/busway'
-      : location.pathname.startsWith(item.path);
-    
+    const isActive =
+      item.path === "/busway"
+        ? location.pathname === "/busway"
+        : location.pathname.startsWith(item.path);
+
     const button = (
       <ListItemButton
         selected={isActive}
@@ -87,37 +96,37 @@ const Sidebar: React.FC = () => {
           mx: 1,
           borderRadius: 2,
           mb: 0.5,
-          justifyContent: collapsed ? 'center' : 'initial',
-          transition: 'all 0.2s ease',
-          '&.Mui-selected': {
+          justifyContent: collapsed ? "center" : "initial",
+          transition: "all 0.2s ease",
+          "&.Mui-selected": {
             backgroundColor: `${theme.palette.primary.main}15`,
             color: theme.palette.primary.main,
-            '&:hover': {
+            "&:hover": {
               backgroundColor: `${theme.palette.primary.main}25`,
             },
           },
-          '&:hover': {
+          "&:hover": {
             backgroundColor: theme.palette.action.hover,
-            transform: 'translateX(4px)',
+            transform: "translateX(4px)",
           },
         }}
       >
-        <ListItemIcon 
-          sx={{ 
+        <ListItemIcon
+          sx={{
             minWidth: collapsed ? 0 : 40,
             mr: collapsed ? 0 : 2,
-            justifyContent: 'center',
-            color: isActive ? theme.palette.primary.main : 'inherit',
+            justifyContent: "center",
+            color: isActive ? theme.palette.primary.main : "inherit",
           }}
         >
           {item.icon}
         </ListItemIcon>
         {!collapsed && (
-          <ListItemText 
+          <ListItemText
             primary={item.text}
             primaryTypographyProps={{
               fontWeight: isActive ? 600 : 500,
-              fontSize: '0.9rem',
+              fontSize: "0.9rem",
             }}
           />
         )}
@@ -127,7 +136,7 @@ const Sidebar: React.FC = () => {
     if (collapsed) {
       return (
         <Tooltip key={item.text} title={item.text} placement="right" arrow>
-          <ListItem disablePadding sx={{ display: 'block' }}>
+          <ListItem disablePadding sx={{ display: "block" }}>
             {button}
           </ListItem>
         </Tooltip>
@@ -136,7 +145,7 @@ const Sidebar: React.FC = () => {
 
     return (
       <Fade in key={item.text} style={{ transitionDelay: `${index * 50}ms` }}>
-        <ListItem disablePadding sx={{ display: 'block' }}>
+        <ListItem disablePadding sx={{ display: "block" }}>
           {button}
         </ListItem>
       </Fade>
@@ -151,33 +160,40 @@ const Sidebar: React.FC = () => {
       sx={{
         width: drawerWidth,
         flexShrink: 0,
-        transition: theme.transitions.create('width', {
+        transition: theme.transitions.create("width", {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.enteringScreen,
         }),
-        '& .MuiDrawer-paper': {
+        "& .MuiDrawer-paper": {
           width: drawerWidth,
-          boxSizing: 'border-box',
-          mt: '72px',
-          height: 'calc(100% - 72px)',
-          borderRight: 'none',
-          transition: theme.transitions.create('width', {
+          boxSizing: "border-box",
+          mt: "72px",
+          height: "calc(100% - 72px)",
+          borderRight: "none",
+          transition: theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
           }),
-          overflowX: 'hidden',
+          overflowX: "hidden",
         },
       }}
     >
-      <Box sx={{ overflow: 'auto', py: 2 }}>
+      <Box sx={{ overflow: "auto", py: 2 }}>
         {/* Collapse Toggle */}
-        <Box sx={{ display: 'flex', justifyContent: collapsed ? 'center' : 'flex-end', px: collapsed ? 0 : 2, mb: 2 }}>
-          <IconButton 
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: collapsed ? "center" : "flex-end",
+            px: collapsed ? 0 : 2,
+            mb: 2,
+          }}
+        >
+          <IconButton
             onClick={handleCollapseToggle}
             size="small"
             sx={{
-              transition: 'transform 0.3s',
-              transform: collapsed ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: "transform 0.3s",
+              transform: collapsed ? "rotate(180deg)" : "rotate(0deg)",
             }}
           >
             {collapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
@@ -192,15 +208,21 @@ const Sidebar: React.FC = () => {
         <>
           <Divider sx={{ my: 2, mx: collapsed ? 2 : 3 }} />
           <List sx={{ px: collapsed ? 0 : 1 }}>
-            {adminMenuItems.map((item, index) => renderMenuItem(item, index + publicMenuItems.length))}
+            {adminMenuItems.map((item, index) =>
+              renderMenuItem(item, index + publicMenuItems.length),
+            )}
           </List>
         </>
 
         {/* Footer Info */}
         {!collapsed && (
           <Fade in>
-            <Box sx={{ px: 3, py: 2, mt: 'auto' }}>
-              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+            <Box sx={{ px: 3, py: 2, mt: "auto" }}>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ display: "block", mb: 1 }}
+              >
                 BusWay GIS v2.0
               </Typography>
               <Typography variant="caption" color="text.secondary">

@@ -1,196 +1,221 @@
 import { buswayApi } from "./httpClient";
 import { Stop, ApiResponse } from "../../types";
 
-// Mock data for testing without backend
-const mockStops: Stop[] = [
-  {
-    id: 1,
-    code: "S001",
-    name: "Times Square Station",
-    latitude: 40.758,
-    longitude: -73.9855,
-    address: "Times Square, Manhattan",
-    hasShelter: true,
-    wheelchairAccessible: true,
-    bench: true,
-    city: "New York",
-  },
-  {
-    id: 2,
-    code: "S002",
-    name: "Central Park South",
-    latitude: 40.7654,
-    longitude: -73.9757,
-    address: "Central Park South, Manhattan",
-    hasShelter: true,
-    wheelchairAccessible: true,
-    bench: true,
-    city: "New York",
-  },
-  {
-    id: 3,
-    code: "S003",
-    name: "Grand Central Terminal",
-    latitude: 40.7527,
-    longitude: -73.9772,
-    address: "42nd St & Park Ave, Manhattan",
-    hasShelter: true,
-    wheelchairAccessible: true,
-    bench: true,
-    city: "New York",
-  },
-  {
-    id: 4,
-    code: "S004",
-    name: "Penn Station",
-    latitude: 40.7505,
-    longitude: -73.9934,
-    address: "34th St & 8th Ave, Manhattan",
-    hasShelter: true,
-    wheelchairAccessible: true,
-    bench: true,
-    city: "New York",
-  },
-  {
-    id: 5,
-    code: "S005",
-    name: "Wall Street Station",
-    latitude: 40.7074,
-    longitude: -74.0113,
-    address: "Wall Street, Manhattan",
-    hasShelter: false,
-    wheelchairAccessible: false,
-    bench: true,
-    city: "New York",
-  },
-];
+// Backend API endpoints for stops:
+// GET /api/busway/stops - Get all stops
+// GET /api/busway/stops/{id} - Get stop by ID
+// GET /api/busway/stops/code/{code} - Get stop by code
+// GET /api/busway/stops/route/{routeId} - Get stops by route
+// GET /api/busway/stops/city/{city} - Get stops by city
+// GET /api/busway/stops/zone/{zone} - Get stops by zone
+// GET /api/busway/stops/nearest - Find nearest stops
+// GET /api/busway/stops/top-nearest - Find top nearest stops
+// GET /api/busway/stops/bbox - Find stops in bounding box
+// GET /api/busway/stops/accessible - Get accessible stops
+// GET /api/busway/stops/with-shelter - Get stops with shelter
+// GET /api/busway/stops/with-bench - Get stops with bench
+// GET /api/busway/stops/with-facilities - Get stops with both facilities
+// GET /api/busway/stops/search - Search stops by name
+// GET /api/busway/stops/distance - Calculate distance between stops
+// GET /api/busway/stops/statistics - Get stop statistics
+// GET /api/busway/stops/geojson - Export stops as GeoJSON
+// POST /api/busway/stops - Create stop
+// POST /api/busway/stops/bulk - Create multiple stops
+// PUT /api/busway/stops/{id} - Update stop
+// PATCH /api/busway/stops/{id} - Partial update stop
+// PATCH /api/busway/stops/{id}/location - Update stop location
+// PATCH /api/busway/stops/{id}/toggle-status - Toggle stop status
+// DELETE /api/busway/stops/{id} - Delete stop
+// DELETE /api/busway/stops/{id}/hard - Hard delete stop
+// DELETE /api/busway/stops/bulk - Delete multiple stops
 
-// Use mock data flag - set to false when backend is ready
-const USE_MOCK_DATA = false;
+// StopRequest interface for creating/updating stops
+export interface StopRequest {
+  code: string;
+  name: string;
+  latitude: number;
+  longitude: number;
+  address?: string;
+  hasShelter?: boolean;
+  wheelchairAccessible?: boolean;
+  bench?: boolean;
+  city?: string;
+  zone?: string;
+}
 
 export const stopService = {
-  // Get all stops
+  // GET /api/busway/stops - Get all stops
   getAll: async (): Promise<Stop[]> => {
-    if (USE_MOCK_DATA) {
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(mockStops), 500);
-      });
-    }
     const response = await buswayApi.get<ApiResponse<Stop[]>>("/stops");
     return response.data.data;
   },
 
-  // Get stop by ID
+  // GET /api/busway/stops/{id} - Get stop by ID
   getById: async (id: number): Promise<Stop> => {
-    if (USE_MOCK_DATA) {
-      const stop = mockStops.find((s) => s.id === id);
-      if (!stop) throw new Error("Stop not found");
-      return stop;
-    }
     const response = await buswayApi.get<ApiResponse<Stop>>(`/stops/${id}`);
     return response.data.data;
   },
 
-  // Get stop by code
+  // GET /api/busway/stops/code/{code} - Get stop by code
   getByCode: async (code: string): Promise<Stop> => {
-    if (USE_MOCK_DATA) {
-      const stop = mockStops.find((s) => s.code === code);
-      if (!stop) throw new Error("Stop not found");
-      return stop;
-    }
-    const response = await buswayApi.get<ApiResponse<Stop>>(
-      `/stops/code/${code}`,
-    );
+    const response = await buswayApi.get<ApiResponse<Stop>>(`/stops/code/${code}`);
     return response.data.data;
   },
 
-  // Get nearest stops
-  getNearest: async (
-    lat: number,
-    lng: number,
-    radius: number = 500,
-  ): Promise<Stop[]> => {
-    if (USE_MOCK_DATA) {
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(mockStops.slice(0, 3)), 300);
-      });
-    }
-    const response = await buswayApi.get<ApiResponse<Stop[]>>(
-      "/stops/nearest",
-      {
-        params: { lat, lng, radius },
-      },
-    );
+  // GET /api/busway/stops/route/{routeId} - Get stops by route
+  getByRoute: async (routeId: number): Promise<Stop[]> => {
+    const response = await buswayApi.get<ApiResponse<Stop[]>>(`/stops/route/${routeId}`);
     return response.data.data;
   },
 
-  // Get wheelchair accessible stops
+  // GET /api/busway/stops/city/{city} - Get stops by city
+  getByCity: async (city: string): Promise<Stop[]> => {
+    const response = await buswayApi.get<ApiResponse<Stop[]>>(`/stops/city/${city}`);
+    return response.data.data;
+  },
+
+  // GET /api/busway/stops/zone/{zone} - Get stops by zone
+  getByZone: async (zone: string): Promise<Stop[]> => {
+    const response = await buswayApi.get<ApiResponse<Stop[]>>(`/stops/zone/${zone}`);
+    return response.data.data;
+  },
+
+  // GET /api/busway/stops/nearest - Find nearest stops
+  getNearest: async (lat: number, lng: number, radius: number = 500): Promise<Stop[]> => {
+    const response = await buswayApi.get<ApiResponse<Stop[]>>("/stops/nearest", {
+      params: { lat, lng, radius },
+    });
+    return response.data.data;
+  },
+
+  // GET /api/busway/stops/top-nearest - Find top nearest stops
+  getTopNearest: async (lat: number, lng: number, limit: number = 5): Promise<Stop[]> => {
+    const response = await buswayApi.get<ApiResponse<Stop[]>>("/stops/top-nearest", {
+      params: { lat, lng, limit },
+    });
+    return response.data.data;
+  },
+
+  // GET /api/busway/stops/bbox - Find stops in bounding box
+  getInBbox: async (minLon: number, minLat: number, maxLon: number, maxLat: number): Promise<Stop[]> => {
+    const response = await buswayApi.get<ApiResponse<Stop[]>>("/stops/bbox", {
+      params: { minLon, minLat, maxLon, maxLat },
+    });
+    return response.data.data;
+  },
+
+  // GET /api/busway/stops/accessible - Get accessible stops
   getAccessible: async (): Promise<Stop[]> => {
-    if (USE_MOCK_DATA) {
-      return mockStops.filter((stop) => stop.wheelchairAccessible);
-    }
-    const response =
-      await buswayApi.get<ApiResponse<Stop[]>>("/stops/accessible");
+    const response = await buswayApi.get<ApiResponse<Stop[]>>("/stops/accessible");
     return response.data.data;
   },
 
-  // Get stops with shelter
+  // GET /api/busway/stops/with-shelter - Get stops with shelter
   getWithShelter: async (): Promise<Stop[]> => {
-    if (USE_MOCK_DATA) {
-      return mockStops.filter((stop) => stop.hasShelter);
-    }
-    const response = await buswayApi.get<ApiResponse<Stop[]>>(
-      "/stops/with-shelter",
-    );
+    const response = await buswayApi.get<ApiResponse<Stop[]>>("/stops/with-shelter");
     return response.data.data;
   },
 
-  // Get stops with bench
+  // GET /api/busway/stops/with-bench - Get stops with bench
   getWithBench: async (): Promise<Stop[]> => {
-    if (USE_MOCK_DATA) {
-      return mockStops.filter((stop) => stop.bench);
-    }
-    const response =
-      await buswayApi.get<ApiResponse<Stop[]>>("/stops/with-bench");
+    const response = await buswayApi.get<ApiResponse<Stop[]>>("/stops/with-bench");
     return response.data.data;
   },
 
-  // Create stop (admin)
-  create: async (stop: Omit<Stop, "id">): Promise<Stop> => {
-    if (USE_MOCK_DATA) {
-      const newStop = {
-        ...stop,
-        id: Math.max(...mockStops.map((s) => s.id)) + 1,
-      };
-      mockStops.push(newStop as Stop);
-      return newStop as Stop;
-    }
+  // GET /api/busway/stops/with-facilities - Get stops with both facilities
+  getWithFacilities: async (): Promise<Stop[]> => {
+    const response = await buswayApi.get<ApiResponse<Stop[]>>("/stops/with-facilities");
+    return response.data.data;
+  },
+
+  // GET /api/busway/stops/search - Search stops by name
+  search: async (query: string): Promise<Stop[]> => {
+    const response = await buswayApi.get<ApiResponse<Stop[]>>("/stops/search", {
+      params: { query },
+    });
+    return response.data.data;
+  },
+
+  // GET /api/busway/stops/distance - Calculate distance between stops
+  getDistance: async (fromStopId: number, toStopId: number): Promise<number> => {
+    const response = await buswayApi.get<ApiResponse<number>>("/stops/distance", {
+      params: { from: fromStopId, to: toStopId },
+    });
+    return response.data.data;
+  },
+
+  // GET /api/busway/stops/statistics - Get stop statistics
+  getStatistics: async (): Promise<any> => {
+    const response = await buswayApi.get<ApiResponse<any>>("/stops/statistics");
+    return response.data.data;
+  },
+
+  // GET /api/busway/stops/geojson - Export stops as GeoJSON
+  getGeoJSON: async (): Promise<any> => {
+    const response = await buswayApi.get<ApiResponse<any>>("/stops/geojson");
+    return response.data.data;
+  },
+
+  // POST /api/busway/stops - Create stop
+  create: async (stop: StopRequest): Promise<Stop> => {
     const response = await buswayApi.post<ApiResponse<Stop>>("/stops", stop);
     return response.data.data;
   },
 
-  // Update stop (admin)
-  update: async (id: number, stop: Partial<Stop>): Promise<Stop> => {
-    if (USE_MOCK_DATA) {
-      const index = mockStops.findIndex((s) => s.id === id);
-      if (index === -1) throw new Error("Stop not found");
-      mockStops[index] = { ...mockStops[index], ...stop };
-      return mockStops[index];
-    }
-    const response = await buswayApi.put<ApiResponse<Stop>>(
-      `/stops/${id}`,
-      stop,
-    );
+  // POST /api/busway/stops/bulk - Create multiple stops
+  createBulk: async (stops: StopRequest[]): Promise<Stop[]> => {
+    const response = await buswayApi.post<ApiResponse<Stop[]>>("/stops/bulk", stops);
     return response.data.data;
   },
 
-  // Delete stop (admin)
+  // PUT /api/busway/stops/{id} - Update stop
+  update: async (id: number, stop: Partial<StopRequest>): Promise<Stop> => {
+    const response = await buswayApi.put<ApiResponse<Stop>>(`/stops/${id}`, stop);
+    return response.data.data;
+  },
+
+  // PATCH /api/busway/stops/{id} - Partial update stop
+  patch: async (id: number, stop: Partial<StopRequest>): Promise<Stop> => {
+    const response = await buswayApi.patch<ApiResponse<Stop>>(`/stops/${id}`, stop);
+    return response.data.data;
+  },
+
+  // PATCH /api/busway/stops/{id}/location - Update stop location
+  updateLocation: async (id: number, lat: number, lng: number): Promise<Stop> => {
+    const response = await buswayApi.patch<ApiResponse<Stop>>(`/stops/${id}/location`, {
+      lat, lng
+    });
+    return response.data.data;
+  },
+
+  // PATCH /api/busway/stops/{id}/toggle-status - Toggle stop status
+  toggleStatus: async (id: number): Promise<Stop> => {
+    const response = await buswayApi.patch<ApiResponse<Stop>>(`/stops/${id}/toggle-status`);
+    return response.data.data;
+  },
+
+  // DELETE /api/busway/stops/{id} - Delete stop (soft delete)
   delete: async (id: number): Promise<void> => {
-    if (USE_MOCK_DATA) {
-      const index = mockStops.findIndex((s) => s.id === id);
-      if (index !== -1) mockStops.splice(index, 1);
-      return;
-    }
     await buswayApi.delete(`/stops/${id}`);
+  },
+
+  // DELETE /api/busway/stops/{id}/hard - Hard delete stop
+  hardDelete: async (id: number): Promise<void> => {
+    await buswayApi.delete(`/stops/${id}/hard`);
+  },
+
+  // DELETE /api/busway/stops/bulk - Delete multiple stops
+  deleteBulk: async (ids: number[]): Promise<void> => {
+    await buswayApi.delete("/stops/bulk", { data: ids });
+  },
+
+  // Check API health
+  checkApiHealth: async (): Promise<boolean> => {
+    try {
+      await buswayApi.get("/stops");
+      return true;
+    } catch {
+      return false;
+    }
   },
 };

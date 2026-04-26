@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Paper,
@@ -27,39 +27,39 @@ import {
   Grid,
   Card,
   CardContent,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Add as AddIcon,
   MyLocation as LocationIcon,
   People as PeopleIcon,
-} from '@mui/icons-material';
-import { busService } from '../../services/BusWay/busService';
-import { routeService } from '../../services/BusWay/routeService';
-import { Bus, Route } from '../../types';
-import { useAppDispatch } from '../../store/hooks';
-import { showNotification } from '../../store/slices/uiSlice';
-import { getOccupancyColor } from '../../../utils/formatters';
+} from "@mui/icons-material";
+import { busService } from "../../services/BusWay/busService";
+import { routeService } from "../../services/BusWay/routeService";
+import { Bus, Route } from "../../types";
+import { useAppDispatch } from "../../store/hooks";
+import { showNotification } from "../../store/slices/uiSlice";
+import { getOccupancyColor } from "../../../utils/formatters";
 
 interface BusFormData {
   busNumber: string;
   latitude: number;
   longitude: number;
-  status: 'ACTIVE' | 'INACTIVE' | 'MAINTENANCE';
+  status: "ACTIVE" | "INACTIVE" | "MAINTENANCE";
   routeId?: number;
-  occupancyStatus: 'AVAILABLE' | 'FULL' | 'LIMITED';
+  occupancyStatus: "AVAILABLE" | "FULL" | "LIMITED";
   currentPassengers: number;
   capacity: number;
 }
 
 const initialFormData: BusFormData = {
-  busNumber: '',
+  busNumber: "",
   latitude: 40.7484,
   longitude: -73.9857,
-  status: 'ACTIVE',
+  status: "ACTIVE",
   routeId: undefined,
-  occupancyStatus: 'AVAILABLE',
+  occupancyStatus: "AVAILABLE",
   currentPassengers: 0,
   capacity: 50,
 };
@@ -75,7 +75,8 @@ const BusManager: React.FC = () => {
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [busToDelete, setBusToDelete] = useState<number | null>(null);
   const [locationUpdateOpen, setLocationUpdateOpen] = useState(false);
-  const [selectedBusForLocation, setSelectedBusForLocation] = useState<Bus | null>(null);
+  const [selectedBusForLocation, setSelectedBusForLocation] =
+    useState<Bus | null>(null);
   const [newLocation, setNewLocation] = useState({ lat: 0, lng: 0 });
   const [occupancyUpdateOpen, setOccupancyUpdateOpen] = useState(false);
   const [newPassengerCount, setNewPassengerCount] = useState(0);
@@ -91,10 +92,12 @@ const BusManager: React.FC = () => {
       const data = await busService.getAll();
       setBuses(data || []);
     } catch (error) {
-      dispatch(showNotification({
-        message: 'Failed to load buses',
-        severity: 'error',
-      }));
+      dispatch(
+        showNotification({
+          message: "Failed to load buses",
+          severity: "error",
+        }),
+      );
       setBuses([]);
     } finally {
       setLoading(false);
@@ -106,7 +109,7 @@ const BusManager: React.FC = () => {
       const data = await routeService.getAll();
       setRoutes(data || []);
     } catch (error) {
-      console.error('Failed to load routes:', error);
+      console.error("Failed to load routes:", error);
       setRoutes([]);
     }
   };
@@ -141,24 +144,30 @@ const BusManager: React.FC = () => {
     try {
       if (editingBus) {
         await busService.update(editingBus.id, formData);
-        dispatch(showNotification({
-          message: 'Bus updated successfully',
-          severity: 'success',
-        }));
+        dispatch(
+          showNotification({
+            message: "Bus updated successfully",
+            severity: "success",
+          }),
+        );
       } else {
         await busService.create(formData);
-        dispatch(showNotification({
-          message: 'Bus created successfully',
-          severity: 'success',
-        }));
+        dispatch(
+          showNotification({
+            message: "Bus created successfully",
+            severity: "success",
+          }),
+        );
       }
       handleCloseDialog();
       loadBuses();
     } catch (error) {
-      dispatch(showNotification({
-        message: 'Failed to save bus',
-        severity: 'error',
-      }));
+      dispatch(
+        showNotification({
+          message: "Failed to save bus",
+          severity: "error",
+        }),
+      );
     }
   };
 
@@ -172,16 +181,20 @@ const BusManager: React.FC = () => {
 
     try {
       await busService.delete(busToDelete);
-      dispatch(showNotification({
-        message: 'Bus deleted successfully',
-        severity: 'success',
-      }));
+      dispatch(
+        showNotification({
+          message: "Bus deleted successfully",
+          severity: "success",
+        }),
+      );
       loadBuses();
     } catch (error) {
-      dispatch(showNotification({
-        message: 'Failed to delete bus',
-        severity: 'error',
-      }));
+      dispatch(
+        showNotification({
+          message: "Failed to delete bus",
+          severity: "error",
+        }),
+      );
     } finally {
       setDeleteConfirmOpen(false);
       setBusToDelete(null);
@@ -201,19 +214,23 @@ const BusManager: React.FC = () => {
       await busService.updateLocation(
         selectedBusForLocation.id,
         newLocation.lat,
-        newLocation.lng
+        newLocation.lng,
       );
-      dispatch(showNotification({
-        message: 'Bus location updated successfully',
-        severity: 'success',
-      }));
+      dispatch(
+        showNotification({
+          message: "Bus location updated successfully",
+          severity: "success",
+        }),
+      );
       setLocationUpdateOpen(false);
       loadBuses();
     } catch (error) {
-      dispatch(showNotification({
-        message: 'Failed to update bus location',
-        severity: 'error',
-      }));
+      dispatch(
+        showNotification({
+          message: "Failed to update bus location",
+          severity: "error",
+        }),
+      );
     }
   };
 
@@ -227,38 +244,44 @@ const BusManager: React.FC = () => {
     if (!selectedBusForLocation) return;
 
     try {
-      await busService.updateOccupancy(selectedBusForLocation.id, newPassengerCount);
-      dispatch(showNotification({
-        message: 'Bus occupancy updated successfully',
-        severity: 'success',
-      }));
+      await busService.updateOccupancy(
+        selectedBusForLocation.id,
+        newPassengerCount,
+      );
+      dispatch(
+        showNotification({
+          message: "Bus occupancy updated successfully",
+          severity: "success",
+        }),
+      );
       setOccupancyUpdateOpen(false);
       loadBuses();
     } catch (error) {
-      dispatch(showNotification({
-        message: 'Failed to update bus occupancy',
-        severity: 'error',
-      }));
+      dispatch(
+        showNotification({
+          message: "Failed to update bus occupancy",
+          severity: "error",
+        }),
+      );
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'ACTIVE':
-        return 'success';
-      case 'INACTIVE':
-        return 'default';
-      case 'MAINTENANCE':
-        return 'warning';
+      case "ACTIVE":
+        return "success";
+      case "INACTIVE":
+        return "default";
+      case "MAINTENANCE":
+        return "warning";
       default:
-        return 'default';
+        return "default";
     }
   };
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Typography variant="h5">Bus Management</Typography>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
@@ -268,7 +291,7 @@ const BusManager: React.FC = () => {
         </Button>
       </Box>
 
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -299,7 +322,7 @@ const BusManager: React.FC = () => {
                   <TableCell>
                     <Chip label={bus.busNumber} size="small" color="primary" />
                   </TableCell>
-                  <TableCell>{bus.routeName || 'Unassigned'}</TableCell>
+                  <TableCell>{bus.routeName || "Unassigned"}</TableCell>
                   <TableCell>
                     <Chip
                       label={bus.status}
@@ -317,7 +340,13 @@ const BusManager: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     <Box sx={{ minWidth: 120 }}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          mb: 0.5,
+                        }}
+                      >
                         <Typography variant="caption">
                           {bus.currentPassengers}/{bus.capacity}
                         </Typography>
@@ -328,10 +357,10 @@ const BusManager: React.FC = () => {
                             backgroundColor: getOccupancyColor(
                               bus.occupancyStatus,
                               bus.currentPassengers,
-                              bus.capacity
+                              bus.capacity,
                             ),
-                            color: 'white',
-                            fontSize: '0.7rem',
+                            color: "white",
+                            fontSize: "0.7rem",
                           }}
                         />
                       </Box>
@@ -341,12 +370,12 @@ const BusManager: React.FC = () => {
                         sx={{
                           height: 4,
                           borderRadius: 2,
-                          backgroundColor: '#e0e0e0',
-                          '& .MuiLinearProgress-bar': {
+                          backgroundColor: "#e0e0e0",
+                          "& .MuiLinearProgress-bar": {
                             backgroundColor: getOccupancyColor(
                               bus.occupancyStatus,
                               bus.currentPassengers,
-                              bus.capacity
+                              bus.capacity,
                             ),
                           },
                         }}
@@ -354,16 +383,31 @@ const BusManager: React.FC = () => {
                     </Box>
                   </TableCell>
                   <TableCell>
-                    <IconButton onClick={() => handleOpenLocationUpdate(bus)} size="small" title="Update Location">
+                    <IconButton
+                      onClick={() => handleOpenLocationUpdate(bus)}
+                      size="small"
+                      title="Update Location"
+                    >
                       <LocationIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleOpenOccupancyUpdate(bus)} size="small" title="Update Occupancy">
+                    <IconButton
+                      onClick={() => handleOpenOccupancyUpdate(bus)}
+                      size="small"
+                      title="Update Occupancy"
+                    >
                       <PeopleIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleOpenDialog(bus)} size="small">
+                    <IconButton
+                      onClick={() => handleOpenDialog(bus)}
+                      size="small"
+                    >
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleDeleteClick(bus.id)} size="small" color="error">
+                    <IconButton
+                      onClick={() => handleDeleteClick(bus.id)}
+                      size="small"
+                      color="error"
+                    >
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>
@@ -375,26 +419,36 @@ const BusManager: React.FC = () => {
       </TableContainer>
 
       {/* Create/Edit Dialog */}
-      <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>
-          {editingBus ? 'Edit Bus' : 'Create New Bus'}
-        </DialogTitle>
+      <Dialog
+        open={dialogOpen}
+        onClose={handleCloseDialog}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>{editingBus ? "Edit Bus" : "Create New Bus"}</DialogTitle>
         <DialogContent>
-          <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ pt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
             <TextField
               label="Bus Number"
               value={formData.busNumber}
-              onChange={(e) => setFormData({ ...formData, busNumber: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, busNumber: e.target.value })
+              }
               fullWidth
               required
             />
-            
+
             <FormControl fullWidth>
               <InputLabel>Route</InputLabel>
               <Select
-                value={formData.routeId || ''}
+                value={formData.routeId || ""}
                 label="Route"
-                onChange={(e) => setFormData({ ...formData, routeId: e.target.value as number })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    routeId: e.target.value as number,
+                  })
+                }
               >
                 <MenuItem value="">None</MenuItem>
                 {routes.map((route) => (
@@ -410,7 +464,9 @@ const BusManager: React.FC = () => {
               <Select
                 value={formData.status}
                 label="Status"
-                onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+                onChange={(e) =>
+                  setFormData({ ...formData, status: e.target.value as any })
+                }
               >
                 <MenuItem value="ACTIVE">Active</MenuItem>
                 <MenuItem value="INACTIVE">Inactive</MenuItem>
@@ -418,12 +474,17 @@ const BusManager: React.FC = () => {
               </Select>
             </FormControl>
 
-            <Box sx={{ display: 'flex', gap: 2 }}>
+            <Box sx={{ display: "flex", gap: 2 }}>
               <TextField
                 label="Latitude"
                 type="number"
                 value={formData.latitude}
-                onChange={(e) => setFormData({ ...formData, latitude: parseFloat(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    latitude: parseFloat(e.target.value),
+                  })
+                }
                 fullWidth
                 required
                 inputProps={{ step: 0.000001 }}
@@ -432,7 +493,12 @@ const BusManager: React.FC = () => {
                 label="Longitude"
                 type="number"
                 value={formData.longitude}
-                onChange={(e) => setFormData({ ...formData, longitude: parseFloat(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    longitude: parseFloat(e.target.value),
+                  })
+                }
                 fullWidth
                 required
                 inputProps={{ step: 0.000001 }}
@@ -444,7 +510,12 @@ const BusManager: React.FC = () => {
               <Select
                 value={formData.occupancyStatus}
                 label="Occupancy Status"
-                onChange={(e) => setFormData({ ...formData, occupancyStatus: e.target.value as any })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    occupancyStatus: e.target.value as any,
+                  })
+                }
               >
                 <MenuItem value="AVAILABLE">Available</MenuItem>
                 <MenuItem value="LIMITED">Limited</MenuItem>
@@ -452,12 +523,17 @@ const BusManager: React.FC = () => {
               </Select>
             </FormControl>
 
-            <Box sx={{ display: 'flex', gap: 2 }}>
+            <Box sx={{ display: "flex", gap: 2 }}>
               <TextField
                 label="Current Passengers"
                 type="number"
                 value={formData.currentPassengers}
-                onChange={(e) => setFormData({ ...formData, currentPassengers: parseInt(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    currentPassengers: parseInt(e.target.value),
+                  })
+                }
                 fullWidth
                 required
                 inputProps={{ min: 0, max: formData.capacity }}
@@ -466,7 +542,12 @@ const BusManager: React.FC = () => {
                 label="Capacity"
                 type="number"
                 value={formData.capacity}
-                onChange={(e) => setFormData({ ...formData, capacity: parseInt(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    capacity: parseInt(e.target.value),
+                  })
+                }
                 fullWidth
                 required
                 inputProps={{ min: 1 }}
@@ -477,21 +558,29 @@ const BusManager: React.FC = () => {
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
           <Button onClick={handleSubmit} variant="contained" color="primary">
-            {editingBus ? 'Update' : 'Create'}
+            {editingBus ? "Update" : "Create"}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Location Update Dialog */}
-      <Dialog open={locationUpdateOpen} onClose={() => setLocationUpdateOpen(false)}>
+      <Dialog
+        open={locationUpdateOpen}
+        onClose={() => setLocationUpdateOpen(false)}
+      >
         <DialogTitle>Update Bus Location</DialogTitle>
         <DialogContent>
-          <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ pt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
             <TextField
               label="Latitude"
               type="number"
               value={newLocation.lat}
-              onChange={(e) => setNewLocation({ ...newLocation, lat: parseFloat(e.target.value) })}
+              onChange={(e) =>
+                setNewLocation({
+                  ...newLocation,
+                  lat: parseFloat(e.target.value),
+                })
+              }
               fullWidth
               inputProps={{ step: 0.000001 }}
             />
@@ -499,7 +588,12 @@ const BusManager: React.FC = () => {
               label="Longitude"
               type="number"
               value={newLocation.lng}
-              onChange={(e) => setNewLocation({ ...newLocation, lng: parseFloat(e.target.value) })}
+              onChange={(e) =>
+                setNewLocation({
+                  ...newLocation,
+                  lng: parseFloat(e.target.value),
+                })
+              }
               fullWidth
               inputProps={{ step: 0.000001 }}
             />
@@ -507,14 +601,21 @@ const BusManager: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setLocationUpdateOpen(false)}>Cancel</Button>
-          <Button onClick={handleLocationUpdate} variant="contained" color="primary">
+          <Button
+            onClick={handleLocationUpdate}
+            variant="contained"
+            color="primary"
+          >
             Update
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Occupancy Update Dialog */}
-      <Dialog open={occupancyUpdateOpen} onClose={() => setOccupancyUpdateOpen(false)}>
+      <Dialog
+        open={occupancyUpdateOpen}
+        onClose={() => setOccupancyUpdateOpen(false)}
+      >
         <DialogTitle>Update Passenger Count</DialogTitle>
         <DialogContent>
           <Box sx={{ pt: 2 }}>
@@ -530,21 +631,35 @@ const BusManager: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOccupancyUpdateOpen(false)}>Cancel</Button>
-          <Button onClick={handleOccupancyUpdate} variant="contained" color="primary">
+          <Button
+            onClick={handleOccupancyUpdate}
+            variant="contained"
+            color="primary"
+          >
             Update
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
-      <Dialog open={deleteConfirmOpen} onClose={() => setDeleteConfirmOpen(false)}>
+      <Dialog
+        open={deleteConfirmOpen}
+        onClose={() => setDeleteConfirmOpen(false)}
+      >
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
-          <Typography>Are you sure you want to delete this bus? This action cannot be undone.</Typography>
+          <Typography>
+            Are you sure you want to delete this bus? This action cannot be
+            undone.
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteConfirmOpen(false)}>Cancel</Button>
-          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+          <Button
+            onClick={handleDeleteConfirm}
+            color="error"
+            variant="contained"
+          >
             Delete
           </Button>
         </DialogActions>

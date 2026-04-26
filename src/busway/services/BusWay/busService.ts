@@ -1,213 +1,171 @@
 import { buswayApi } from "./httpClient";
 import { Bus, ApiResponse } from "../../types";
 
-// Mock data for testing without backend
-const mockBuses: Bus[] = [
-  {
-    id: 1,
-    busNumber: "B101",
-    latitude: 40.7484,
-    longitude: -73.9857,
-    status: "ACTIVE",
-    routeName: "Downtown Express",
-    routeId: 1,
-    occupancyStatus: "AVAILABLE",
-    currentPassengers: 15,
-    capacity: 50,
-    lastUpdated: new Date().toISOString(),
-  },
-  {
-    id: 2,
-    busNumber: "B202",
-    latitude: 40.75,
-    longitude: -73.98,
-    status: "ACTIVE",
-    routeName: "Airport Shuttle",
-    routeId: 2,
-    occupancyStatus: "LIMITED",
-    currentPassengers: 35,
-    capacity: 40,
-    lastUpdated: new Date().toISOString(),
-  },
-  {
-    id: 3,
-    busNumber: "B303",
-    latitude: 40.752,
-    longitude: -73.975,
-    status: "ACTIVE",
-    routeName: "University Loop",
-    routeId: 3,
-    occupancyStatus: "AVAILABLE",
-    currentPassengers: 8,
-    capacity: 45,
-    lastUpdated: new Date().toISOString(),
-  },
-  {
-    id: 4,
-    busNumber: "B404",
-    latitude: 40.755,
-    longitude: -73.97,
-    status: "MAINTENANCE",
-    routeName: "Beach Connector",
-    routeId: 4,
-    occupancyStatus: "AVAILABLE",
-    currentPassengers: 0,
-    capacity: 35,
-    lastUpdated: new Date().toISOString(),
-  },
-];
-
-// Use mock data flag - set to true
-const USE_MOCK_DATA = false;
+// Backend API endpoints for buses:
+// GET /api/busway/buses - Get all buses
+// GET /api/busway/buses/{id} - Get bus by ID
+// GET /api/busway/buses/number/{busNumber} - Get bus by number
+// GET /api/busway/buses/nearest - Find nearest buses
+// GET /api/busway/buses/top-nearest - Find top nearest buses
+// GET /api/busway/buses/route/{routeId} - Get buses on route
+// GET /api/busway/buses/approaching/{stopId} - Get buses approaching stop
+// GET /api/busway/buses/heading-to-stop/{stopId} - Get buses heading to stop
+// POST /api/busway/buses - Create bus
+// PUT /api/busway/buses/{id} - Update bus
+// DELETE /api/busway/buses/{id} - Delete bus
+// PUT /api/busway/buses/{id}/location - Update location
+// PUT /api/busway/buses/{id}/occupancy - Update occupancy
+// PUT /api/busway/buses/{id}/status - Change status
+// PUT /api/busway/buses/{id}/next-stop/{stopId} - Update next stop
 
 export const busService = {
-  // Get all buses
+  // GET /api/busway/buses - Get all buses
   getAll: async (): Promise<Bus[]> => {
-    if (USE_MOCK_DATA) {
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(mockBuses), 500);
-      });
-    }
     const response = await buswayApi.get<ApiResponse<Bus[]>>("/buses");
     return response.data.data;
   },
 
-  // Get bus by ID
+  // GET /api/busway/buses/{id} - Get bus by ID
   getById: async (id: number): Promise<Bus> => {
-    if (USE_MOCK_DATA) {
-      const bus = mockBuses.find((b) => b.id === id);
-      if (!bus) throw new Error("Bus not found");
-      return bus;
-    }
     const response = await buswayApi.get<ApiResponse<Bus>>(`/buses/${id}`);
     return response.data.data;
   },
 
-  // Get bus by number
+  // GET /api/busway/buses/number/{busNumber} - Get bus by number
   getByNumber: async (busNumber: string): Promise<Bus> => {
-    if (USE_MOCK_DATA) {
-      const bus = mockBuses.find((b) => b.busNumber === busNumber);
-      if (!bus) throw new Error("Bus not found");
-      return bus;
-    }
     const response = await buswayApi.get<ApiResponse<Bus>>(
       `/buses/number/${busNumber}`,
     );
     return response.data.data;
   },
 
-  // Get nearest buses (CORE FEATURE)
-  getNearest: async (
+  // GET /api/busway/buses/nearest - Find nearest buses
+  findNearest: async (
     lat: number,
     lng: number,
-    radius: number = 1000,
+    radius: number,
   ): Promise<Bus[]> => {
-    if (USE_MOCK_DATA) {
-      return new Promise((resolve) => {
-        setTimeout(
-          () => resolve(mockBuses.filter((bus) => bus.status === "ACTIVE")),
-          300,
-        );
-      });
-    }
     const response = await buswayApi.get<ApiResponse<Bus[]>>("/buses/nearest", {
       params: { lat, lng, radius },
     });
     return response.data.data;
   },
 
-  // Get buses on route
+  // GET /api/busway/buses/top-nearest - Find top nearest buses
+  findTopNearest: async (
+    lat: number,
+    lng: number,
+    limit: number = 5,
+  ): Promise<Bus[]> => {
+    const response = await buswayApi.get<ApiResponse<Bus[]>>(
+      "/buses/top-nearest",
+      {
+        params: { lat, lng, limit },
+      },
+    );
+    return response.data.data;
+  },
+
+  // GET /api/busway/buses/route/{routeId} - Get buses on route
   getByRoute: async (routeId: number): Promise<Bus[]> => {
-    if (USE_MOCK_DATA) {
-      return mockBuses.filter((bus) => bus.routeId === routeId);
-    }
     const response = await buswayApi.get<ApiResponse<Bus[]>>(
       `/buses/route/${routeId}`,
     );
     return response.data.data;
   },
 
-  // Get buses approaching stop
+  // GET /api/busway/buses/approaching/{stopId} - Get buses approaching stop
   getApproachingStop: async (stopId: number): Promise<Bus[]> => {
-    if (USE_MOCK_DATA) {
-      return mockBuses.filter((bus) => bus.status === "ACTIVE");
-    }
     const response = await buswayApi.get<ApiResponse<Bus[]>>(
       `/buses/approaching/${stopId}`,
     );
     return response.data.data;
   },
 
-  // Create bus (admin)
+  // GET /api/busway/buses/heading-to-stop/{stopId} - Get buses heading to stop
+  getHeadingToStop: async (stopId: number): Promise<Bus[]> => {
+    const response = await buswayApi.get<ApiResponse<Bus[]>>(
+      `/buses/heading-to-stop/${stopId}`,
+    );
+    return response.data.data;
+  },
+
+  // POST /api/busway/buses - Create bus
   create: async (bus: Omit<Bus, "id">): Promise<Bus> => {
-    if (USE_MOCK_DATA) {
-      const newBus = {
-        ...bus,
-        id: Math.max(...mockBuses.map((b) => b.id)) + 1,
-      };
-      mockBuses.push(newBus as Bus);
-      return newBus as Bus;
-    }
     const response = await buswayApi.post<ApiResponse<Bus>>("/buses", bus);
     return response.data.data;
   },
 
-  // Update bus (admin)
+  // PUT /api/busway/buses/{id} - Update bus
   update: async (id: number, bus: Partial<Bus>): Promise<Bus> => {
-    if (USE_MOCK_DATA) {
-      const index = mockBuses.findIndex((b) => b.id === id);
-      if (index === -1) throw new Error("Bus not found");
-      mockBuses[index] = { ...mockBuses[index], ...bus };
-      return mockBuses[index];
-    }
     const response = await buswayApi.put<ApiResponse<Bus>>(`/buses/${id}`, bus);
     return response.data.data;
   },
 
-  // Delete bus (admin)
+  // DELETE /api/busway/buses/{id} - Delete bus
   delete: async (id: number): Promise<void> => {
-    if (USE_MOCK_DATA) {
-      const index = mockBuses.findIndex((b) => b.id === id);
-      if (index !== -1) mockBuses.splice(index, 1);
-      return;
-    }
     await buswayApi.delete(`/buses/${id}`);
   },
 
-  // Update bus location (real-time)
+  // PUT /api/busway/buses/{id}/location - Update location
   updateLocation: async (
     id: number,
     lat: number,
     lng: number,
+    speed?: number,
+    heading?: number,
   ): Promise<Bus> => {
-    if (USE_MOCK_DATA) {
-      const bus = mockBuses.find((b) => b.id === id);
-      if (!bus) throw new Error("Bus not found");
-      bus.latitude = lat;
-      bus.longitude = lng;
-      bus.lastUpdated = new Date().toISOString();
-      return bus;
-    }
     const response = await buswayApi.put<ApiResponse<Bus>>(
       `/buses/${id}/location`,
-      { lat, lng },
+      {
+        lat,
+        lng,
+        speed,
+        heading,
+      },
     );
     return response.data.data;
   },
 
-  // Update bus occupancy
+  // PUT /api/busway/buses/{id}/occupancy - Update occupancy
   updateOccupancy: async (id: number, passengerCount: number): Promise<Bus> => {
-    if (USE_MOCK_DATA) {
-      const bus = mockBuses.find((b) => b.id === id);
-      if (!bus) throw new Error("Bus not found");
-      bus.currentPassengers = passengerCount;
-      bus.lastUpdated = new Date().toISOString();
-      return bus;
-    }
     const response = await buswayApi.put<ApiResponse<Bus>>(
       `/buses/${id}/occupancy`,
-      { passengerCount },
+      null,
+      {
+        params: { passengerCount },
+      },
     );
     return response.data.data;
+  },
+
+  // PUT /api/busway/buses/{id}/status - Change status
+  updateStatus: async (id: number, status: string): Promise<Bus> => {
+    const response = await buswayApi.put<ApiResponse<Bus>>(
+      `/buses/${id}/status`,
+      null,
+      {
+        params: { status },
+      },
+    );
+    return response.data.data;
+  },
+
+  // PUT /api/busway/buses/{id}/next-stop/{stopId} - Update next stop
+  updateNextStop: async (id: number, stopId: number): Promise<Bus> => {
+    const response = await buswayApi.put<ApiResponse<Bus>>(
+      `/buses/${id}/next-stop/${stopId}`,
+    );
+    return response.data.data;
+  },
+
+  // Check if backend API is available
+  checkApiHealth: async (): Promise<boolean> => {
+    try {
+      await buswayApi.get("/buses");
+      return true;
+    } catch {
+      return false;
+    }
   },
 };
