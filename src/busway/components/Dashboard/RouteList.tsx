@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -14,21 +14,21 @@ import {
   InputAdornment,
   Chip,
   CircularProgress,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Route as RouteIcon,
   Search as SearchIcon,
   Place as StopIcon,
-} from '@mui/icons-material';
-import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { fetchAllRoutes } from '../../store/slices/routeSlice';
-import { setSelectedRoute } from '../../store/slices/routeSlice';
-import { setMapCenter, setMapZoom } from '../../store/slices/uiSlice';
+} from "@mui/icons-material";
+import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import { fetchAllRoutes } from "../../store/slices/routeSlice";
+import { setSelectedRoute } from "../../store/slices/routeSlice";
+import { setMapCenter, setMapZoom } from "../../store/slices/uiSlice";
 
 const RouteList: React.FC = () => {
   const dispatch = useAppDispatch();
   const { routes, loading } = useAppSelector((state) => state.routes);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     dispatch(fetchAllRoutes());
@@ -37,12 +37,12 @@ const RouteList: React.FC = () => {
   const filteredRoutes = routes.filter(
     (route) =>
       route.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      route.routeNumber.toLowerCase().includes(searchTerm.toLowerCase())
+      route.routeNumber.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const handleRouteClick = (route: any) => {
     dispatch(setSelectedRoute(route));
-    
+
     if (route.geometry.coordinates.length > 0) {
       const [lng, lat] = route.geometry.coordinates[0];
       dispatch(setMapCenter([lat, lng]));
@@ -51,7 +51,7 @@ const RouteList: React.FC = () => {
   };
 
   return (
-    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <CardContent>
         <Typography variant="h6" gutterBottom>
           Bus Routes
@@ -74,11 +74,11 @@ const RouteList: React.FC = () => {
         />
 
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", py: 3 }}>
             <CircularProgress />
           </Box>
         ) : (
-          <List sx={{ maxHeight: 400, overflow: 'auto' }}>
+          <List sx={{ maxHeight: 400, overflow: "auto" }}>
             {filteredRoutes.map((route, index) => (
               <React.Fragment key={route.id}>
                 {index > 0 && <Divider />}
@@ -86,36 +86,45 @@ const RouteList: React.FC = () => {
                   onClick={() => handleRouteClick(route)}
                   sx={{
                     borderRadius: 1,
-                    '&:hover': {
-                      backgroundColor: 'action.hover',
+                    "&:hover": {
+                      backgroundColor: "action.hover",
                     },
                   }}
                 >
                   <ListItemIcon>
-                    <RouteIcon sx={{ color: route.color || '#3366CC' }} />
+                    <RouteIcon sx={{ color: route.color || "#3366CC" }} />
                   </ListItemIcon>
                   <ListItemText
                     primary={
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Typography variant="subtitle2">
+                      <Box
+                        component="span"
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
+                        <Typography component="span" variant="subtitle2">
                           {route.routeNumber}
                         </Typography>
                         <Chip
                           size="small"
                           label={route.name}
                           sx={{
-                            backgroundColor: route.color || '#3366CC',
-                            color: 'white',
-                            fontSize: '0.7rem',
+                            backgroundColor: route.color || "#3366CC",
+                            color: "white",
+                            fontSize: "0.7rem",
                           }}
                         />
                       </Box>
                     }
                     secondary={
-                      <Box sx={{ display: 'flex', gap: 2, mt: 0.5 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Box
+                        component="span"
+                        sx={{ display: "flex", gap: 2, mt: 0.5 }}
+                      >
+                        <Box
+                          component="span"
+                          sx={{ display: "flex", alignItems: "center" }}
+                        >
                           <StopIcon sx={{ fontSize: 14, mr: 0.5 }} />
-                          <Typography variant="caption">
+                          <Typography component="span" variant="caption">
                             {route.geometry.coordinates.length} stops
                           </Typography>
                         </Box>

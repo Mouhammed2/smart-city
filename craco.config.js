@@ -1,14 +1,14 @@
-const path = require('path');
+const path = require("path");
 
 module.exports = {
   webpack: {
     configure: (webpackConfig) => {
       webpackConfig.resolve.alias = {
         ...webpackConfig.resolve.alias,
-        'mapbox-gl': 'maplibre-gl',
-        '@': path.resolve(__dirname, 'src/fixMyCity')
+        "mapbox-gl": "maplibre-gl",
+        "@": path.resolve(__dirname, "src/fixMyCity"),
       };
       return webpackConfig;
-    }
-  }
+    },
+  },
 };

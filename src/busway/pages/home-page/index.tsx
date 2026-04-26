@@ -1,1 +1,1 @@
-export { default } from '../../components/Dashboard/RouteList';
+export { default } from "./Dashboard";
