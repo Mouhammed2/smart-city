@@ -5,12 +5,10 @@ export interface ApiResponse<T> {
 }
 
 export type User = {
-  id: number;
+  id: string;
   username: string;
   email: string;
   role: 'USER' | 'ADMIN';
-  firstName?: string;
-  lastName?: string;
 };
 
 export type AuthState = {
@@ -32,6 +30,13 @@ export type RegisterPayload = {
   confirmPassword: string;
   rememberMe: boolean;
 };
+
+
+export interface ApiResponse<T> {
+  message: string;
+  data: T;
+  timestamp: string;
+}
 
 export type LoginResDTO = { token: string };
 export type RefreshResDTO = { token?: string; accessToken?: string };

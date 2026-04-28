@@ -4,6 +4,7 @@ import LoginContent from "../auth/components/loginContent";
 
 export default function HomePage() {
   const { user, isAuthenticated } = useAuth();
+  console.log(user)
 
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-12">

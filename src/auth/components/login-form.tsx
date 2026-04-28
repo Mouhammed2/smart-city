@@ -3,7 +3,7 @@ import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AuthShell } from './auth-shell';
-import { type AuthErrors, type LoginPayload, validateLogin } from './auth-dto';
+import { type AuthErrors, type LoginPayload, validateLogin } from '../auth-dto';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
