@@ -5,13 +5,7 @@ services:
     ports:
       - "3000:80"
     networks:
-      - microservices-network
-
+      - public-network
 networks:
   public-network:
     external: true
-
-services:
-  smart-city-front:
-    networks:
-      - public-network
