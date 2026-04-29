@@ -8,5 +8,10 @@ services:
       - microservices-network
 
 networks:
-  microservices-network:
+  public-network:
     external: true
+
+services:
+  smart-city-front:
+    networks:
+      - public-network
