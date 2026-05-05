@@ -1,0 +1,11 @@
+services:
+  smart-city-front:
+    build: .
+    container_name: smart-city-front
+    ports:
+      - "3000:80"
+    networks:
+      - public-network
+networks:
+  public-network:
+    external: true

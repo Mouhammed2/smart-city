@@ -3,7 +3,7 @@ import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AuthShell } from './auth-shell';
-import { type AuthErrors, type RegisterPayload, validateRegister } from './auth-dto';
+import { type AuthErrors, type RegisterPayload, validateRegister } from '../auth-dto';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -27,7 +27,7 @@ export function RegisterForm() {
   const stateRedirect = fromState?.pathname
     ? `${fromState.pathname}${fromState.search ?? ''}${fromState.hash ?? ''}`
     : undefined;
-  const redirectTo = resolveRedirect(queryRedirect ?? stateRedirect, '/fixmycity');
+  const redirectTo = resolveRedirect(queryRedirect ?? stateRedirect, '/');
 
   function setField<K extends keyof RegisterPayload>(field: K, value: RegisterPayload[K]) {
     setValues((c) => ({ ...c, [field]: value }));
