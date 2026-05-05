@@ -139,6 +139,8 @@ export const logout = async () => {
     } finally {
         clearStoredToken();
         setAuthHeader(null);
+        localStorage.removeItem('jf_role');
+        sessionStorage.removeItem('jf_role');
         setState({ user: null, isAuthenticated: false, loading: false, error: null });
     }
 };
