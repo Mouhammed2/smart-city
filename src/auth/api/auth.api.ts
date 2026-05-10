@@ -1,5 +1,5 @@
 import { api } from '../../shared/api/httpClient';
-import type { ApiResponse, LoginPayload, LoginResDTO, RefreshResDTO, RegisterPayload, RegisterResDTO, User } from '../components/auth-dto';
+import type { ApiResponse, LoginPayload, LoginResDTO, RefreshResDTO, RegisterPayload, RegisterResDTO, User } from '../auth-dto';
 
 export const apiLogin = (dto: LoginPayload) =>
     api.post<ApiResponse<LoginResDTO>>(
