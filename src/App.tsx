@@ -1,34 +1,51 @@
-import React, { useEffect, type ReactNode } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { store } from 'busway/store/store';
+import React, { useEffect, type ReactNode } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
+import { Provider } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { store } from "busway/store/store";
 
-import ErrorBoundary from 'busway/components/Common/ErrorBoundary';
-import FixMyCityRoutes from './fixMyCity/FixMyCityRoutes';
-import BusWayRoutes from 'busway/BusWayRoutes';
-import { LoginPage } from './auth/pages/login-page';
-import { RegisterPage } from './auth/pages/register-page';
-import Notification from 'busway/components/Common/Notification';
-import ProtectedRoute from './auth/components/protected-route';
-import HomePage from './home/home-page';
+import ErrorBoundary from "busway/components/Common/ErrorBoundary";
+import FixMyCityRoutes from "./fixMyCity/FixMyCityRoutes";
+import BusWayRoutes from "busway/BusWayRoutes";
+import EventsHandlerRoutes from "./eventsHandler/EventsHandlerRoutes";
+import { store as eventsHandlerStore } from "./eventsHandler/store/store";
+import { LoginPage } from "./auth/pages/login-page";
+import { RegisterPage } from "./auth/pages/register-page";
+import Notification from "busway/components/Common/Notification";
+import ProtectedRoute from "./auth/components/protected-route";
+import HomePage from "./home/home-page";
 
-import { checkAuthStatus } from './auth/store/authSlice';
-import { useAuth } from './auth/store/useAuth';
+import { checkAuthStatus } from "./auth/store/authSlice";
+import { useAuth } from "./auth/store/useAuth";
 
-const resolveRedirect = (candidate: string | null | undefined, fallback: string) =>
-  candidate && candidate.startsWith('/') ? candidate : fallback;
+const resolveRedirect = (
+  candidate: string | null | undefined,
+  fallback: string,
+) => (candidate && candidate.startsWith("/") ? candidate : fallback);
 
 const GuestOnly: React.FC<{ children: ReactNode }> = ({ children }) => {
   const location = useLocation();
   const { isAuthenticated } = useAuth();
-  const queryRedirect = new URLSearchParams(location.search).get('redirect');
-  const fromState = (location.state as { from?: { pathname?: string; search?: string; hash?: string } } | null)?.from;
+  const queryRedirect = new URLSearchParams(location.search).get("redirect");
+  const fromState = (
+    location.state as {
+      from?: { pathname?: string; search?: string; hash?: string };
+    } | null
+  )?.from;
   const stateRedirect = fromState?.pathname
-    ? `${fromState.pathname}${fromState.search ?? ''}${fromState.hash ?? ''}`
+    ? `${fromState.pathname}${fromState.search ?? ""}${fromState.hash ?? ""}`
     : undefined;
-  const redirectTo = resolveRedirect(queryRedirect ?? stateRedirect, '/fixmycity');
+  const redirectTo = resolveRedirect(
+    queryRedirect ?? stateRedirect,
+    "/fixmycity",
+  );
 
   if (isAuthenticated) {
     return <Navigate to={redirectTo} replace />;
@@ -76,6 +93,16 @@ const AppContent: React.FC = () => {
             element={
               <ProtectedRoute>
                 <BusWayRoutes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/events/*"
+            element={
+              <ProtectedRoute>
+                <Provider store={eventsHandlerStore}>
+                  <EventsHandlerRoutes />
+                </Provider>
               </ProtectedRoute>
             }
           />

@@ -11,4 +11,23 @@ module.exports = {
       return webpackConfig;
     },
   },
+  devServer: {
+    proxy: {
+      "/auth": {
+        target: "http://localhost:8082",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/user": {
+        target: "http://localhost:8082",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/api/eventhandler": {
+        target: "http://localhost:5138",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 };
