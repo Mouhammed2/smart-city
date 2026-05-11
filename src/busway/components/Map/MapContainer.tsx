@@ -132,6 +132,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
       properties: {
         id: bus.id,
         busNumber: bus.busNumber,
+        licensePlate: bus.licensePlate,
         status: bus.status,
         routeName: bus.routeName,
         routeId: bus.routeId,
@@ -159,6 +160,7 @@ const MapContainer: React.FC<MapContainerProps> = ({
   // Route click handler
   const onRouteClick = useCallback(
     (e: any) => {
+      if (!e.target.feature) return;
       const route = routes.find((r) => r.id === e.target.feature.properties.id);
       if (route) {
         dispatch(setSelectedRoute(route));

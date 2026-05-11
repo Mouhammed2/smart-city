@@ -44,6 +44,7 @@ import { getOccupancyColor } from "../../../utils/formatters";
 
 interface BusFormData {
   busNumber: string;
+  licensePlate: string;
   latitude: number;
   longitude: number;
   status: "ACTIVE" | "INACTIVE" | "MAINTENANCE";
@@ -55,6 +56,7 @@ interface BusFormData {
 
 const initialFormData: BusFormData = {
   busNumber: "",
+  licensePlate: "",
   latitude: 40.7484,
   longitude: -73.9857,
   status: "ACTIVE",
@@ -119,6 +121,7 @@ const BusManager: React.FC = () => {
       setEditingBus(bus);
       setFormData({
         busNumber: bus.busNumber,
+        licensePlate: bus.licensePlate,
         latitude: bus.latitude,
         longitude: bus.longitude,
         status: bus.status,
@@ -332,10 +335,16 @@ const BusManager: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     <Typography variant="caption" display="block">
-                      Lat: {bus.latitude.toFixed(6)}
+                      Lat:{" "}
+                      {bus.latitude !== undefined
+                        ? bus.latitude.toFixed(6)
+                        : "N/A"}
                     </Typography>
                     <Typography variant="caption" display="block">
-                      Lng: {bus.longitude.toFixed(6)}
+                      Lng:{" "}
+                      {bus.longitude !== undefined
+                        ? bus.longitude.toFixed(6)
+                        : "N/A"}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -433,6 +442,16 @@ const BusManager: React.FC = () => {
               value={formData.busNumber}
               onChange={(e) =>
                 setFormData({ ...formData, busNumber: e.target.value })
+              }
+              fullWidth
+              required
+            />
+
+            <TextField
+              label="License Plate"
+              value={formData.licensePlate}
+              onChange={(e) =>
+                setFormData({ ...formData, licensePlate: e.target.value })
               }
               fullWidth
               required

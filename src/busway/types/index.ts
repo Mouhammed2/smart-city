@@ -35,6 +35,7 @@ export interface Stop {
 export interface Bus {
   id: number;
   busNumber: string;
+  licensePlate: string;
   latitude: number;
   longitude: number;
   status: "ACTIVE" | "INACTIVE" | "MAINTENANCE";
@@ -104,6 +105,7 @@ export interface BusFeature extends Feature<Point> {
   properties: {
     id: number;
     busNumber: string;
+    licensePlate: string;
     status: Bus["status"];
     routeName?: string;
     routeId?: number;
