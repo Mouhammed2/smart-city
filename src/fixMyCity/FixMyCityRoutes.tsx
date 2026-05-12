@@ -5,39 +5,20 @@ import {DashboardPage} from "./pages/dashboard-page";
 import {NewReportPage} from "./pages/new-report-page";
 import {IssueDetailPage} from "./pages/issue-detail-page";
 import {TrackingPage} from "./pages/tracking-page";
+import { AdminPage } from './pages/admin-page';
 
 const FixMyCityRoutes = () => {
   return (
     <Routes>
+      <Route index element={<DashboardPage />} />
+      <Route path="new-report" element={<NewReportPage />} />
+      <Route path="tracking" element={<TrackingPage />} />
+      <Route path="issue/:id" element={<IssueDetailPage />} />
       <Route
-        index
+        path="admin"
         element={
-          <ProtectedRoute>
-            <DashboardPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="new-report"
-        element={
-          <ProtectedRoute>
-            <NewReportPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="tracking"
-        element={
-          <ProtectedRoute>
-            <TrackingPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="issue/:id"
-        element={
-          <ProtectedRoute>
-            <IssueDetailPage />
+          <ProtectedRoute requireAdmin fallback={<Navigate to="/fixmycity" replace />}>
+            <AdminPage />
           </ProtectedRoute>
         }
       />

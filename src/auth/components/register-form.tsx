@@ -1,5 +1,5 @@
 import { type ChangeEvent, type FormEvent, useState } from 'react';
-import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AuthShell } from './auth-shell';
@@ -10,7 +10,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { register } from '../store/authSlice';
 
-const initialValues: RegisterPayload = { email: '', password: '', confirmPassword: '', rememberMe: true };
+const initialValues: RegisterPayload = {
+  name: '',
+  lastname: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+  rememberMe: true,
+};
 
 const resolveRedirect = (candidate: string | null | undefined, fallback: string) =>
   candidate && candidate.startsWith('/') ? candidate : fallback;
@@ -56,6 +63,40 @@ export function RegisterForm() {
   return (
       <AuthShell title="Creer un compte" description="Inscrivez-vous pour signaler et suivre les incidents" activeTab="register">
         <form className="space-y-4" onSubmit={handleSubmit} noValidate>
+          <div className="space-y-2">
+            <Label htmlFor="register-name">Prenom</Label>
+            <div className="relative">
+              <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+              <Input
+                id="register-name"
+                type="text"
+                autoComplete="given-name"
+                className="pl-9"
+                placeholder="Votre prenom"
+                value={values.name}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setField('name', e.target.value)}
+              />
+            </div>
+            {errors.name && <p className="text-sm text-red-600">{errors.name}</p>}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="register-lastname">Nom</Label>
+            <div className="relative">
+              <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+              <Input
+                id="register-lastname"
+                type="text"
+                autoComplete="family-name"
+                className="pl-9"
+                placeholder="Votre nom"
+                value={values.lastname}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setField('lastname', e.target.value)}
+              />
+            </div>
+            {errors.lastname && <p className="text-sm text-red-600">{errors.lastname}</p>}
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="register-email">Adresse e-mail</Label>
             <div className="relative">

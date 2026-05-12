@@ -20,6 +20,6 @@ export const apiMe = () =>
 export const apiRegister = (dto: RegisterPayload) =>
     api.post<ApiResponse<RegisterResDTO>>(
         '/auth/register',
-        { email: dto.email, password: dto.password },
+        { name: dto.name, lastname: dto.lastname, email: dto.email, password: dto.password },
         { withCredentials: true }
     );

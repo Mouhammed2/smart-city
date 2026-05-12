@@ -25,6 +25,8 @@ export type LoginPayload = {
 };
 
 export type RegisterPayload = {
+  name: string;
+  lastname: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -60,6 +62,8 @@ export function validateLogin(values: LoginPayload): AuthErrors<LoginPayload> {
 
 export function validateRegister(values: RegisterPayload): AuthErrors<RegisterPayload> {
   const errors: AuthErrors<RegisterPayload> = {};
+  if (!values.name) errors.name = 'Prenom requis';
+  if (!values.lastname) errors.lastname = 'Nom requis';
   if (!values.email) errors.email = 'Email requis';
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) errors.email = 'Email invalide';
   if (!values.password) errors.password = 'Mot de passe requis';
