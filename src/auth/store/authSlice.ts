@@ -111,16 +111,14 @@ export const logout = async () => {
     try {
         const token = getStoredToken();
         if (token) await apiLogout(token);
-    } finally {
-        clearStoredToken();
-        setAuthHeader(null);
-        setState({
-            user: null,
-            isAuthenticated: false,
-            loading: false,
-            error: null,
-        });
-    }
+    }  finally {
+    clearStoredToken();
+    setAuthHeader(null);
+    localStorage.removeItem('jf_role');
+    sessionStorage.removeItem('jf_role');
+    setState({ user: null, isAuthenticated: false, loading: false, error: null });
+}
+
 };
 
 export const checkAuthStatus = async () => {
