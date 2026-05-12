@@ -7,16 +7,27 @@ import { createReport, ensureFixMyCityUser } from '@/lib/api/fixmycity.api';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { TopAppBar } from '@/components/layout/app-shell';
+import { useLocation as useBrowserLocation } from '../../../busway/hooks/useLocation';
 
 export const NewReportPage = () => {
   const navigate = useNavigate();
+  const { location: rawLocation, error: locationError, loading: locationLoading } = useBrowserLocation() as any;
+  const location = rawLocation as any;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [addressText, setAddressText] = useState('');
-  const [latitude, setLatitude] = useState('36.8065');
-  const [longitude, setLongitude] = useState('10.1815');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const locationStatus = location
+    ? 'Current location detected and will be attached to your report.'
+    : locationLoading
+      ? 'Requesting your current location...'
+      : locationError
+        ? String(locationError).toLowerCase().includes('denied')
+          ? 'Location permission was denied. You can still submit the report without sharing coordinates.'
+          : 'Unable to detect your location right now. You can still submit the report without coordinates.'
+        : 'We will try to attach your current location automatically.';
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -31,12 +42,14 @@ export const NewReportPage = () => {
 
     try {
       await ensureFixMyCityUser();
+      const latitude = location?.latitude;
+      const longitude = location?.longitude;
       const created = await createReport({
         title: title.trim(),
         description: description.trim(),
         addressText: addressText.trim() || undefined,
-        latitude: Number(latitude),
-        longitude: Number(longitude),
+        latitude: typeof latitude === 'number' ? latitude : undefined,
+        longitude: typeof longitude === 'number' ? longitude : undefined,
       });
 
       navigate(`/fixmycity/issue/${created.id}`);
@@ -75,21 +88,8 @@ export const NewReportPage = () => {
                 onChange={(event) => setAddressText(event.target.value)}
               />
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <Input
-                  type="number"
-                  step="any"
-                  placeholder="Latitude"
-                  value={latitude}
-                  onChange={(event) => setLatitude(event.target.value)}
-                />
-                <Input
-                  type="number"
-                  step="any"
-                  placeholder="Longitude"
-                  value={longitude}
-                  onChange={(event) => setLongitude(event.target.value)}
-                />
+              <div className="rounded-md bg-slate-100 p-3 text-sm text-slate-600">
+                {locationStatus ?? 'We will try to attach your current location automatically.'}
               </div>
 
               {error && <p className="rounded-md bg-red-100 p-2 text-sm text-red-700">{error}</p>}

@@ -24,8 +24,8 @@ export type CivilReport = {
   title: string;
   description: string;
   status: ReportStatus;
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
   addressText?: string | null;
   createdAt: string;
 };
@@ -108,8 +108,8 @@ export const getReportById = async (id: string) => {
 export const createReport = async (payload: {
   title: string;
   description: string;
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
   addressText?: string;
 }) => {
   const response = await api.post<ApiResponse<CivilReport>>(

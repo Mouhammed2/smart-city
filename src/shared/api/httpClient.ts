@@ -58,7 +58,8 @@ api.interceptors.response.use(
       requestUrl.includes('/auth/register') ||
       requestUrl.includes('/auth/refresh');
 
-    if (status === 401 && originalRequest && !originalRequest._retry && !isAuthCall) {
+    // If unauthorized or forbidden, try to refresh (unless this is an auth call)
+    if ((status === 401 || status === 403) && originalRequest && !originalRequest._retry && !isAuthCall) {
       originalRequest._retry = true;
       try {
         const refreshResponse = await refreshClient.post('/auth/refresh', {});
@@ -83,7 +84,8 @@ api.interceptors.response.use(
       }
     }
 
-    if (status === 401 && !isAuthCall) {
+    // If still unauthorized/forbidden after retry or if it's an auth call, clear session and redirect
+    if ((status === 401 || status === 403) && !isAuthCall) {
       clearStoredToken();
       redirectToLogin();
     }

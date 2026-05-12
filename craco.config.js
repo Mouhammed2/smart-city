@@ -11,6 +11,13 @@ module.exports = {
       return webpackConfig;
     },
   },
+  jest: {
+    configure: {
+      moduleNameMapper: {
+        '^@/(.*)$': '<rootDir>/src/fixMyCity/$1',
+      },
+    },
+  },
   devServer: {
     proxy: {
       "/auth": {

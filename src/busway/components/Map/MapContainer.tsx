@@ -1,3 +1,4 @@
+
 import React, { useEffect, useMemo, useCallback } from "react";
 import {
   MapContainer as LeafletMap,
@@ -9,6 +10,7 @@ import {
   Popup,
 } from "react-leaflet";
 import L from "leaflet";
+// @ts-ignore: local workaround for missing @mui/material type declarations
 import { Box, Typography } from "@mui/material";
 import "leaflet/dist/leaflet.css";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
@@ -26,7 +28,9 @@ import { selectAllBuses } from "../../store/slices/busSlice";
 import { RouteFeature, StopFeature, BusFeature } from "../../types";
 
 // Fix Leaflet default marker icons
+// @ts-ignore: import asset (png) - provide as string via bundler
 import iconUrl from "leaflet/dist/images/marker-icon.png";
+// @ts-ignore: import asset (png) - provide as string via bundler
 import iconShadowUrl from "leaflet/dist/images/marker-shadow.png";
 
 const DefaultIcon = L.icon({
