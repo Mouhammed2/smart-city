@@ -69,7 +69,7 @@ const Navbar: React.FC = () => {
     <AppBar
       position="fixed"
       sx={{
-        zIndex: (theme) => theme.zIndex.drawer + 1,
+        zIndex: (theme: any) => theme.zIndex.drawer + 1,
         backgroundColor: theme.palette.background.paper,
         color: theme.palette.text.primary,
       }}

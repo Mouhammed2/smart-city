@@ -44,7 +44,11 @@ const AdminPage: React.FC = () => {
             Manage your BusWay system
           </Typography>
         </Box>
-        <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ px: 3 }}>
+        <Tabs
+          value={tab}
+          onChange={(_: any, v: number) => setTab(v)}
+          sx={{ px: 3 }}
+        >
           <Tab icon={<BusIcon />} iconPosition="start" label="Buses" />
           <Tab icon={<RouteIcon />} iconPosition="start" label="Routes" />
           <Tab icon={<StopIcon />} iconPosition="start" label="Stops" />
