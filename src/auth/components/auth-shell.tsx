@@ -37,7 +37,7 @@ export function AuthShell({ title, description, activeTab, children }: AuthShell
             <div className="rounded-md bg-blue-700 p-2 text-white">
               <Building2 className="h-4 w-4" />
             </div>
-            <span className="text-sm font-semibold text-slate-700">Le Civic Architect</span>
+            <span className="text-sm font-semibold text-slate-700">Urbain Flow</span>
           </div>
           <div>
             <CardTitle className="text-2xl text-slate-900">{title}</CardTitle>
