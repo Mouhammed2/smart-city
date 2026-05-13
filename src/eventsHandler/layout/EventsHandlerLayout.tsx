@@ -39,7 +39,7 @@ const EventsHandlerLayout: React.FC = () => {
             flexGrow: 1,
             mt: "72px",
             height: "calc(100vh - 72px)",
-            transition: (theme) =>
+            transition: (theme: any) =>
               theme.transitions.create(["width"], {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.enteringScreen,
