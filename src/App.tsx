@@ -24,6 +24,7 @@ import HomePage from "./home/home-page";
 
 import { checkAuthStatus } from "./auth/store/authSlice";
 import { useAuth } from "./auth/store/useAuth";
+import JobFinderRoutes from "./jobFinder/JobFinderRoutes";
 
 const resolveRedirect = (
   candidate: string | null | undefined,
@@ -63,6 +64,14 @@ const AppContent: React.FC = () => {
     <ErrorBoundary>
       <>
         <Routes>
+            <Route
+                path="/jobfinder/*"
+                element={
+                    <ProtectedRoute>
+                        <JobFinderRoutes />
+                    </ProtectedRoute>
+                }
+            />
           <Route
             path="/login"
             element={

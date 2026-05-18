@@ -33,9 +33,13 @@ export const TrackingPage = () => {
     const load = async () => {
       setLoading(true);
       setError(null);
-
       try {
         await ensureFixMyCityUser();
+      } catch {
+        // non-blocking, continue anyway
+        console.warn('ensureFixMyCityUser failed, proceeding anyway');
+      }
+      try {
         setReports(await listCurrentUserReports());
       } catch {
         setError('Could not load your reports.');

@@ -1,5 +1,6 @@
 import { api } from '@/lib/api/axios';
 import { getAuthState } from '../../../auth/store/authSlice';
+import {getStoredToken} from "../../../shared/auth/tokenStorage";
 
 const FIX_MY_CITY_BASE = '/api/city';
 
@@ -83,16 +84,21 @@ export const listReports = async (page = 1, limit = 50) => {
 
 export const listCurrentUserReports = async () => {
   const { user } = getAuthState();
+  const token = getStoredToken();
 
-  if (!user?.id) {
-    return [] as CivilReport[];
-  }
+  const userId = user?.id || (() => {
+    try {
+      const payload = JSON.parse(atob(token!.split('.')[1]));
+      return payload.sub as string;
+    } catch { return null; }
+  })();
+
+  if (!userId) return [] as CivilReport[];
 
   const response = await api.get<ApiResponse<CivilReport[]>>(
-    `${FIX_MY_CITY_BASE}/civilreports/user/${user.id}`,
-    withGatewayHeaders()
+      `${FIX_MY_CITY_BASE}/civilreports/user/${userId}`,
+      withGatewayHeaders()
   );
-
   return response.data.data;
 };
 
